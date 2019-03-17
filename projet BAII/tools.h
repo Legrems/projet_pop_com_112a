@@ -1,5 +1,5 @@
-#ifndef POINT_H
-#define POINT_H
+#ifndef TOOLS_H
+#define TOOLS_H
 
 #include "define.h"
 
