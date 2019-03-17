@@ -1,11 +1,15 @@
+#ifndef OBSTACLE_H
+#define OBSTACLE_H
+
+#include "define.h"
 #include "tools.h"
 
 class Obstacle {
 	
 	private :
 	
-		int ligne_;
-		int colonne_;
+		int ligne_;     //ligne de l'obstacle 
+		int colonne_;   //colonne de l'obstacle
 		
 	public : 
 	
@@ -17,11 +21,13 @@ class Obstacle {
 		: ligne_(l), colonne_(c)
 		{}
 		
-		void ligne(int l);
-		int ligne();
+		void ligne(int l);   //changer de ligne
+		int ligne();         //obtenir la ligne
 		
-		void colonne(int c);
-		int colonne();
+		void colonne(int c);  //changer colonne
+		int colonne();        //obtenir ligne
 
 };
 		
+
+#endif
