@@ -31,7 +31,7 @@ class Obstacle {
 		int ligne();         //obtenir la ligne
 		
 		void colonne(int c);  //changer colonne
-		int colonne();        //obtenir ligne
+		int colonne();        //obtenir colonne
 		
 		bool collide_with(Player p, double marge);
 		

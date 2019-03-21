@@ -46,19 +46,20 @@ bool Player::collide_with(Obstacle o, double marge) {
 	p3.x(o.colonne() + 1 + marge);
 	p3.y(o.ligne() + 1);
 		
-	Rectangle r_marge_vert (p1, p3);
-		
+	Rectangle r_marge_vert (p1, p3); //rectangle contenant l'obstacle et 
+		                             //les marges verticales
 	p1.x(o.colonne());
 	p1.y(o.ligne() - marge);
 	p3.x(o.colonne() + 1);
 	p3.y(o.ligne() + 1 + marge);
 		
-	Rectangle r_marge_horiz (p1, p3);
+	Rectangle r_marge_horiz (p1, p3);//rectangle contenant l'obstacle et 
+		                             //les marges horizontales
 		
 	if (r_marge_vert.appartient(centre_)) {return true;}
 	if (r_marge_horiz.appartient(centre_)) {return true;}
 		
-	Point coin1(o.colonne(), o.ligne());
+	Point coin1(o.colonne(), o.ligne());       //4 coins de l'obstacle
 	Point coin2(o.colonne(), o.ligne() + 1);
 	Point coin3(o.colonne() + 1, o.ligne());
 	Point coin4(o.colonne() + 1, o.ligne() + 1);

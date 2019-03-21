@@ -14,7 +14,6 @@ bool Obstacle::collide_with(Player p, double marge){
 	Point p1(colonne_-marge,ligne_-marge);
 	Point p3(colonne_+marge+1,ligne_+marge+1);
 	
-	
 	Rectangle r_ext(p1,p3);
 	
 	if (!(r_ext.appartient(p.centre()))){return false;}
@@ -24,19 +23,20 @@ bool Obstacle::collide_with(Player p, double marge){
 	p3.x(colonne_+1+marge);
 	p3.y(ligne_+1);
 		
-	Rectangle r_marge_vert (p1,p3);
-		
+	Rectangle r_marge_vert (p1,p3); //rectangle contenant l'obstacle et 
+		                            //les marges verticales
 	p1.x(colonne_);
 	p1.y(ligne_-marge);
 	p3.x(colonne_+1);
 	p3.y(ligne_+1+marge);
 		
-	Rectangle r_marge_horiz (p1,p3);
-		
+	Rectangle r_marge_horiz (p1,p3); //rectangle contenant l'obstacle et 
+		                             //les marges horizontales
+		                             
 	if (r_marge_vert.appartient(p.centre())){return true;}
 	if (r_marge_horiz.appartient(p.centre())){return true;}
 		
-	Point coin1(colonne_,ligne_);
+	Point coin1(colonne_,ligne_);   //4 coins de mon obstacles
 	Point coin2(colonne_,ligne_+1);
 	Point coin3(colonne_+1,ligne_);
 	Point coin4(colonne_+1,ligne_+1);
@@ -56,7 +56,6 @@ bool Obstacle::collide_with(Ball p, double marge){
 	Point p1(colonne_-marge,ligne_-marge);
 	Point p3(colonne_+marge+1,ligne_+marge+1);
 	
-	
 	Rectangle r_ext(p1,p3);
 	
 	if (!(r_ext.appartient(p.centre()))){return false;}
@@ -66,19 +65,20 @@ bool Obstacle::collide_with(Ball p, double marge){
 	p3.x(colonne_+1+marge);
 	p3.y(ligne_+1);
 		
-	Rectangle r_marge_vert (p1,p3);
-		
+	Rectangle r_marge_vert (p1,p3);//rectangle contenant l'obstacle et 
+		                            //les marges verticales
 	p1.x(colonne_);
 	p1.y(ligne_-marge);
 	p3.x(colonne_+1);
 	p3.y(ligne_+1+marge);
 		
-	Rectangle r_marge_horiz (p1,p3);
+	Rectangle r_marge_horiz (p1,p3); //rectangle contenant l'obstacle et 
+		                             //les marges horizontales
 		
 	if (r_marge_vert.appartient(p.centre())){return true;}
 	if (r_marge_horiz.appartient(p.centre())){return true;}
 		
-	Point coin1(colonne_,ligne_);
+	Point coin1(colonne_,ligne_);  //4 coins de mon obstacles
 	Point coin2(colonne_,ligne_+1);
 	Point coin3(colonne_+1,ligne_);
 	Point coin4(colonne_+1,ligne_+1);
