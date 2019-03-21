@@ -1,7 +1,5 @@
 #include "simulation.h"
 
-#define ERROR_MODE_KEYWORD "Error"
-
 using namespace std;
 
 // load simulation state from a file
