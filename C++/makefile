@@ -30,11 +30,11 @@ clean:
 # -- Regles de dependances generees automatiquement
 #
 # DO NOT DELETE THIS LINE
-ball.o: ball.cc ball.h tools.h
-main.o: main.cc simulation.h tools.h player.h obstacle.h ball.h define.h \
+ball.o: ball.cc ball.h define.h tools.h player.h obstacle.h
+main.o: main.cc simulation.h tools.h define.h player.h ball.h obstacle.h \
  error.h enum.h
-obstacle.o: obstacle.cc obstacle.h tools.h
-player.o: player.cc player.h tools.h
-simulation.o: simulation.cc simulation.h tools.h player.h obstacle.h \
- ball.h define.h error.h enum.h
-tools.o: tools.cc tools.h
+obstacle.o: obstacle.cc obstacle.h define.h tools.h ball.h player.h
+player.o: player.cc player.h define.h tools.h ball.h obstacle.h
+simulation.o: simulation.cc simulation.h tools.h define.h player.h ball.h \
+ obstacle.h error.h enum.h
+tools.o: tools.cc tools.h define.h
