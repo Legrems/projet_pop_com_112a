@@ -3,13 +3,17 @@
 using namespace std;
 
 
-Ball::Ball(Point c, double a)
-		: centre_(c), angle_(a), c_dessin_(c.x()+DIM_MAX,DIM_MAX-c.y())
+Ball::Ball(Point c, double a, int n)
+		: centre_(c), angle_(a), nbCells_(n), 
+		 c_dessin_(c.x()+DIM_MAX,DIM_MAX-c.y())
 		{}
 
 Ball::Ball()
 		: angle_(0)
 		{}
+
+void Ball::nbCells(int n){nbCells_ = n;}
+int Ball::nbCells(){return nbCells_;}
 
 void Ball::centre(Point c){centre_ = c;}
 Point Ball::centre(){return centre_;}

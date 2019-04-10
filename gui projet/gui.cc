@@ -11,19 +11,29 @@ bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 	
 	Point c(200,200);
 	
-	Ball b(c,0.0);
+	Ball b(c,0.0,6);
 	
-	c.x(0);
-	c.y(0);
+	Point c1(300,300);
+	Point c2(300,200);
+	Point c3(300,0);
+	Point c4(300,-200);
 	
-	Player p(c,2,10);
+	Player p1(c1,1,4,6);
+	Player p2(c2,2,12,6);
+	Player p3(c3,3,20,6);
+	Player p4(c4,4,17,6);
+
 	
-	Obstacle o(0,0);
+	Obstacle o(2,3,6);
 	
 	draw_ball(cr,b);
-	draw_player(cr,p);
+	draw_player(cr,p1);
+	draw_player(cr,p2);
+	draw_player(cr,p3);
+	draw_player(cr,p4);
 	draw_obstacle(cr,o);
 	
+	//ajouter un cadre noir la fin (à faire ce weekend)
 }
 
 void MyArea::draw_ball(const Cairo::RefPtr<Cairo::Context>& cr,Ball b){
@@ -31,7 +41,7 @@ void MyArea::draw_ball(const Cairo::RefPtr<Cairo::Context>& cr,Ball b){
 	Point c = b.c_dessin();
 	double x = c.x();
 	double y = c.y();
-	double cell = SIDE/Ball::nbCells;
+	double cell = SIDE/b.nbCells();
 	cr->save();
 	cr->arc(x,y,COEF_RAYON_BALLE*cell,0,2*M_PI);
 	cr->set_source_rgb(0.8, 0.0, 0.0);
@@ -41,18 +51,18 @@ void MyArea::draw_ball(const Cairo::RefPtr<Cairo::Context>& cr,Ball b){
 void MyArea::draw_player(const Cairo::RefPtr<Cairo::Context>& cr,Player p){
 	
 	
-	double cell = SIDE/Player::nbCells;
+	double cell = SIDE/p.nbCells();
 	double fr_count = p.count()/MAX_COUNT;
 	Point c = p.c_dessin();
 	double x = c.x();
 	double y = c.y();
 	
-	//Attention, demander les couleurs
-	double red[5]{0,0.2,0.3,0.4,0.5};
-	double green[5]{0,0.2,0.3,0.4,0.5};
-	double blue[5]{0,0.2,0.3,0.4,0.5};
+	//Attention, changer les couleurs
+	double red[5]{0,0.8,0.8,0.4,0.0};
+	double green[5]{0,0.0,0.4,0.4,0.8};
+	double blue[5]{0,0.0,0.0,0.0,0.0};
 	
-	double a_0 = 3*M_PI/2;
+	double a_0 = 3*M_PI/2; //ajouter commentaire "qu'est-ce que c'est"
 	double a_1 = a_0+fr_count*M_PI*2;
 	
 	cr->save();
@@ -75,17 +85,16 @@ void MyArea::draw_player(const Cairo::RefPtr<Cairo::Context>& cr,Player p){
 	
 	cr->save();
 	
-	//Attention, demander le rapport de rayon
-	cr->arc(x,y,0.5*COEF_RAYON_JOUEUR*cell,0,2*M_PI);
+	//Attention, coef rayon = magic number (à modifier)
+	cr->arc(x,y,0.6*COEF_RAYON_JOUEUR*cell,0,2*M_PI); 
 	cr->fill_preserve();
 	cr->stroke();
 }
 
-//Attention j'ai le droit ???
 void MyArea::draw_obstacle(const Cairo::RefPtr<Cairo::Context>& cr,
-                                                        Obstacle o){
+                           Obstacle o){
 	
-	double cell = SIDE/Obstacle::nbCells;
+	double cell = SIDE/o.nbCells();
 	Point c1 = o.coin_sup();
 	Point c2(c1.x(),c1.y()+cell);
 	Point c3(c1.x()+cell,c1.y()+cell);
@@ -106,6 +115,7 @@ void MyArea::draw_obstacle(const Cairo::RefPtr<Cairo::Context>& cr,
 //--------------------------------------
 
 MyEvent::MyEvent() :
+//Attention, marge = magic number
   m_Box(Gtk::ORIENTATION_VERTICAL,10),
   m_Box_Top(Gtk::ORIENTATION_HORIZONTAL, 10),
   
@@ -177,13 +187,3 @@ void MyEvent::on_button_clicked_Step()
 {
   cout << "Step"<<endl;
   }
-
-/*
-
-memo formule : 
-cr->save commence le croquis
-cr->close_path() ferme le "croquis"
-cr->fill_preserve() remplis le "croquis"
-* 
-* 
-* */

@@ -16,19 +16,14 @@ class Obstacle {
 	
 		int ligne_;     //ligne de l'obstacle 
 		int colonne_;   //colonne de l'obstacle
+		int nbCells_;
 		Point coin_sup_;
 		
 	public : 
 	
-		//    ATTENTION !!!!!! QUESTION POUR ASSISTANT !!!!!!!
 		
-		static int nbCells;	
-		
-		//    ATTENTION !!!!!! QUESTION POUR ASSISTANT !!!!!!!
-	
-	
 		Obstacle();
-		Obstacle(int l, int c);
+		Obstacle(int l, int c, int n);
 		
 		void ligne(int l);   //changer de ligne
 		int ligne();         //obtenir la ligne
@@ -38,6 +33,9 @@ class Obstacle {
 		
 		void coin_sup(Point p);
 		Point coin_sup();
+		
+		void nbCells(int n);
+		int nbCells();
 		
 		bool collide_with(Player p, double marge);
 		

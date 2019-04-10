@@ -6,8 +6,8 @@ using namespace std;
 Player::Player()
 		: nbT_(0)
 		{}
-Player::Player(Point c, int n, double co)
-		: centre_(c),nbT_(n),count_(co),
+Player::Player(Point c, int n, double co, int nc)
+		: centre_(c),nbT_(n),count_(co),nbCells_(nc),
 		c_dessin_(c.x()+DIM_MAX,DIM_MAX-c.y())
 		{}		
 
@@ -22,6 +22,9 @@ double Player::count() {return count_;}
 
 void Player::c_dessin(Point c){c_dessin_ = c;}
 Point Player::c_dessin(){return c_dessin_;}
+
+void Player::nbCells(int n){nbCells_ = n;}
+int Player::nbCells(){return nbCells_;}
 
 
 bool Player::collide_with(Player p, double marge) {

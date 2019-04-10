@@ -15,7 +15,8 @@ public:
  
   void draw_ball(const Cairo::RefPtr<Cairo::Context>& cr,Ball b);
   void draw_player(const Cairo::RefPtr<Cairo::Context>& cr,Player p);
-  void draw_obstacle(const Cairo::RefPtr<Cairo::Context>& cr,Obstacle o);
+  void draw_obstacle(const Cairo::RefPtr<Cairo::Context>& cr,
+                     Obstacle o);
 
 
 protected:
