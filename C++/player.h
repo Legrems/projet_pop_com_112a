@@ -12,20 +12,18 @@ class Obstacle;
 class Player{
 	
 	private:
-	
-		Point centre_;   //coordonnée du centre
+		
+		int nbCells_;
 		int nbT_;        //nombre de touche restante
 		double count_;   //compteur avant prochain tir
+		Point centre_;   //coordonnée du centre
+		Point c_dessin_; //centre dans gtkmm
 		
 	public:
 	
-		Player()
-		: nbT_(0)
-		{}
+		Player();
 		
-		Player(Point c, int n, double co)
-		: centre_(c),nbT_(n),count_(co)
-		{}
+		Player(Point c, int n, double co, int nc);
 	
 		void centre(Point c);   //changer le centre
 		Point centre();         //obtenir le centre
@@ -33,6 +31,10 @@ class Player{
 		int nbT();              //obtenir le nombre de touche
 		void count(double c);   //changer le compteur
 		double count();         //obtenir le compteur
+		void c_dessin(Point c);
+		Point c_dessin();
+		void nbCells(int n);
+		int nbCells();
 		
 		bool collide_with(Player p, double marge);
 		

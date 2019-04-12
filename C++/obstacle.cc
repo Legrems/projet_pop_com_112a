@@ -2,11 +2,26 @@
 
 using namespace std;
 
+
+Obstacle::Obstacle()
+		: ligne_(0),colonne_(0)
+		{}
+Obstacle::Obstacle(int l, int c, int n)
+		: ligne_(l), colonne_(c), nbCells_(n),
+		coin_sup_(c*SIDE/n,l*SIDE/n)
+		{}		
+		
 void Obstacle::ligne(int l){ligne_ = l;}
 int Obstacle::ligne(){return ligne_;}
 
 void Obstacle::colonne(int c){colonne_ = c;}
 int Obstacle::colonne(){return colonne_;}
+
+void Obstacle::coin_sup(Point p){coin_sup_=p;}
+Point Obstacle::coin_sup(){return coin_sup_;}
+
+void Obstacle::nbCells(int n){nbCells_ = n;}
+int Obstacle::nbCells(){return nbCells_;}
 
 bool Obstacle::collide_with(Player p, double marge){
 	

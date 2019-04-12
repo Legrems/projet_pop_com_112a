@@ -3,6 +3,13 @@
 #include <algorithm>
 using namespace std;
 
+Point::Point()
+		: x_(0),y_(0)
+		{}
+Point::Point (double x, double y)
+		  : x_(x), y_(y)
+		{}
+	
 
 void Point::x(double new_x){x_ = new_x;}
 
@@ -10,6 +17,21 @@ void Point::y(double new_y){y_ = new_y;}
 
 double Point::x(){return x_;}
 double Point::y(){return y_;}		
+
+
+
+Rectangle::Rectangle ()
+		: p1_(0,0)
+		{}
+		
+Rectangle::Rectangle (Point a, Point b)
+		: p1_(a), p2_(a.x(),b.y()),p3_(b),p4_(a.y(),b.x())
+		{}
+		
+Rectangle::Rectangle (Point a, Point b, Point c, Point d)
+		: p1_(a), p2_(b), p3_(c), p4_(d)
+		{}
+		
 
 Point Rectangle::c1(){return p1_;}
 Point Rectangle::c2(){return p2_;}

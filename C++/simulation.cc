@@ -69,7 +69,7 @@ void Simulation::decodage_ligne(string line)
   
 	static int etat(NBCELL); // initial state
 	static int i(0), total(0);
-    int x(0), y(0), nbt(0), count(0);
+    double x(0), y(0), nbt(0), count(0);
     double angle(0);
 
 	switch(etat) 
@@ -96,15 +96,15 @@ void Simulation::decodage_ligne(string line)
         // Coordonnées en cellule (inversion d'axe Y !)
         double new_x = (x + DIM_MAX) / SIDE * nb_cell;
         double new_y = (DIM_MAX - y) / SIDE * nb_cell;
-        Point c(new_x, new_y);
-        Player new_player(c, nbt, count);
+        Point c(x, y);
+        Player new_player(c, nbt, count, nb_cell);
         Players.push_back(new_player);
 	    break;
     }
 	case NBOBSTACLE: 
 		if (!(data >> total)) error(UNKNOWN_FORMAT);
         else i = 0;
-		if (total == 0) error(NBOBSTACLE_0);
+		if (total == 0) etat = NBBALL;
         else etat = OBSTACLES;
 	    break;
 
@@ -112,14 +112,14 @@ void Simulation::decodage_ligne(string line)
 		if (!(data >> x >> y)) error(UNKNOWN_FORMAT); 
         else ++i;
 		if (i == total) etat = NBBALL;
-        Obstacle new_obstacle(x, y);
+        Obstacle new_obstacle(x, y, nb_cell);
         Obstacles.push_back(new_obstacle);
 	    break;
     }
 	case NBBALL: 
 		if (!(data >> total)) error(UNKNOWN_FORMAT);
         else i = 0;
-		if (total == 0) error(NBBALLS_0);
+        if (total == 0) etat = FIN;
         else etat = BALLS;
 	    break;
     
@@ -130,8 +130,8 @@ void Simulation::decodage_ligne(string line)
         // Coordonnées en cellule (inversion d'axe Y !)
         double new_x = (x + DIM_MAX) / SIDE * nb_cell;
         double new_y = (DIM_MAX - y) / SIDE * nb_cell;
-        Point c(new_x, new_y);
-        Ball new_ball(c, angle);
+        Point c(x, y);
+        Ball new_ball(c, angle, nb_cell);
         Balls.push_back(new_ball);
 	    break;
     }
@@ -320,5 +320,25 @@ bool Simulation::check_errors(bool start_game) {
     if (detect_if_outside(Balls)) return true;
     if (detect_if_outside(Obstacles)) return true;
 
+    cout << FILE_READING_SUCCESS << endl;
     return false;
+}
+
+
+bool Simulation::destroy_all_members(){
+    Players.clear();
+    Balls.clear();
+    Obstacles.clear();
+}
+
+vector<Player> Simulation::get_players_to_draw(){
+    return Players;
+}
+
+vector<Ball> Simulation::get_balls_to_draw(){
+    return Balls;
+}
+
+vector<Obstacle> Simulation::get_obstacles_to_draw(){
+    return Obstacles;
 }

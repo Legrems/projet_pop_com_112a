@@ -12,13 +12,9 @@ class Point
 		
 	public:
 	
-		Point()
-		: x_(0),y_(0)
-		{}
-	
-		Point (double x, double y)
-		  : x_(x), y_(y)
-		{}
+		Point();
+		Point (double x, double y);
+		
 		
 		void x(double new_x);
 		void y(double new_y);
@@ -36,17 +32,11 @@ class Rectangle
 		Point p4_;
 		
 	public:
-		Rectangle ()
-		: p1_(0,0)
-		{}
+		Rectangle ();
 		
-		Rectangle (Point a, Point b)
-		: p1_(a), p2_(a.x(),b.y()),p3_(b),p4_(a.y(),b.x())
-		{}
+		Rectangle (Point a, Point b);
 		
-		Rectangle (Point a, Point b, Point c, Point d)
-		: p1_(a), p2_(b), p3_(c), p4_(d)
-		{}
+		Rectangle (Point a, Point b, Point c, Point d);
 		
 		Point c1();   //donne les coordonnée des 4 coins
 		Point c2();

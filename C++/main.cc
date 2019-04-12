@@ -1,36 +1,35 @@
 #include "simulation.h"
+#include "gui.h"
+#include <gtkmm/application.h>
+#include <gtkmm/window.h>
+
+#define ERROR_MODE_KEYWORD "Error"
 
 using namespace std;
 
+
 int main(int argc, char * argv[]){
 
-    Simulation simu;
+    if (argc == 1 or argc == 2){
+        auto app = Gtk::Application::create();
 
-    // Not enough arguments for now (rendu 1)
-    if (argc != 3) {
-        simu.error(FILENAME_NONE);
+        MyEvent eventWindow;
+        eventWindow.set_default_size(500, 200);
+        eventWindow.set_resizable(false);
+
+        if (argc == 2){
+            eventWindow.load_from_file(argv[1]);
+        }
+
+        return app->run(eventWindow);
     }
 
-    // Not in error mode
-    if (argv[1] != string(simu.ERROR_MODE_KEYWORD)) {
-        simu.error(ERROR_NONE);  
-        return 1;
+    else if (argc == 3 && argv[1] == string(ERROR_MODE_KEYWORD)){
+        Simulation simu;
+        simu.load_from_file(argv[2]);
+        simu.check_errors(true);
     }
 
-    simu.load_from_file(argv[2]);
-
-    if (simu.check_errors(true)) {
-        return 1;
-    }
-
-    // simu.print_players();
-    // simu.print_balls();
-    // simu.print_obstacles();
-
-    // In error mode, with exactly 3 arguments, its ok
-    // So we read the file
-    
-    cout << FILE_READING_SUCCESS << endl;
 
 	return 0;
 }

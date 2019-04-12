@@ -2,11 +2,27 @@
 
 using namespace std;
 
+
+Ball::Ball(Point c, double a, int n)
+		: centre_(c), angle_(a), nbCells_(n), 
+		 c_dessin_(c.x()+DIM_MAX,DIM_MAX-c.y())
+		{}
+
+Ball::Ball()
+		: angle_(0)
+		{}
+
+void Ball::nbCells(int n){nbCells_ = n;}
+int Ball::nbCells(){return nbCells_;}
+
 void Ball::centre(Point c){centre_ = c;}
 Point Ball::centre(){return centre_;}
 
 void Ball::angle(double a){angle_ = a;}
 double Ball::angle(){return angle_;}
+
+void Ball::c_dessin(Point c){c_dessin_ = c;}
+Point Ball::c_dessin(){return c_dessin_;}
 
 bool Ball::collide_with(Player p, double marge){
 	double dist = COEF_RAYON_JOUEUR + COEF_RAYON_BALLE + marge;
