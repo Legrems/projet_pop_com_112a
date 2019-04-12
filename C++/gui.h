@@ -2,9 +2,7 @@
 #define GUI_H
 
 #include <gtkmm.h>
-#include "ball.h"
-#include "player.h"
-#include "obstacle.h"
+#include "tools"
 #include "simulation.h"
 
 
@@ -14,9 +12,8 @@ public:
   
   Simulation simulation;
 
-  void draw_ball(const Cairo::RefPtr<Cairo::Context>& cr, Ball b);
-  void draw_player(const Cairo::RefPtr<Cairo::Context>& cr, Player p);
-  void draw_obstacle(const Cairo::RefPtr<Cairo::Context>& cr, Obstacle o);
+  vvoid draw(const Cairo::RefPtr<Cairo::Context>& cr,Rond r);
+  void draw(const Cairo::RefPtr<Cairo::Context>& cr,Rectangle r);
 
 
 protected:

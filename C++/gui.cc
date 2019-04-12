@@ -31,109 +31,61 @@ bool MyArea::on_draw(const RefPtr<Context>& cr)
     simulation.print_balls();
     simulation.print_obstacles();
 
-    //cout << Players << endl;
-    
-    //Point c(200, 200);
-    
-    //Ball b(c, 0.0, 6);
-    
-    //Point c1(300, 300);
-    //Point c2(300, 200);
-    //Point c3(300, 100);
-    //Point c4(300, 0);
-    
-    //Player p1(c1, 1, 4, 6);
-    //Player p2(c2, 2, 12, 6);
-    //Player p3(c3, 3, 20, 6);
-    //Player p4(c4, 4, 17, 6);
-
-    
-    //Obstacle o(2, 3, 6);
-    
-    //draw_ball(cr, b);
-    //draw_player(cr, p1);
-    //draw_player(cr, p2);
-    //draw_player(cr, p3);
-    //draw_player(cr, p4);
-    //draw_obstacle(cr, o);
-    
-    //ajouter un cadre noir la fin (à faire ce weekend)
+   
 }
 
-void MyArea::draw_ball(const RefPtr<Context>& cr, Ball b){
+void MyArea::draw(const Cairo::RefPtr<Cairo::Context>& cr,Rond r){
 
-    Point c = b.c_dessin();
-    double x = c.x();
-    double y = c.y();
-    double cell = SIDE/b.nbCells();
-    cr->save();
-    cr->arc(x, y, COEF_RAYON_BALLE * cell, 0, 2 * M_PI);
-    cr->set_source_rgb(0.8, 0.0, 0.0);
-    cr->fill_preserve();
-    cr->stroke();
+	Point c = r.centre();
+	double x = c.x(),y = c.y();
+	double blue_r(0.0),blue_g(0.0),blue_b(0.8);
+	
+	Couleur co = r.couleur();
+	double red = co.red(), green = co.green(), blue = co.blue();
+	
+	double fraction = r.fraction();
+	double a_0 = 3*M_PI/2, a_1;
+	
+	cr->save();
+	cr->arc(x,y,r.rayon(),0,2*M_PI);
+	cr->set_source_rgb(red, green, blue);
+	cr->fill_preserve();
+	cr->stroke();
+	
+	if(fraction != 0)
+	{
+		a_1 = a_0 + 2*fraction*M_PI;
+		cr->save();
+		cr->arc(x,y,r.rayon(),a_0,a_1);
+		cr->set_source_rgb(blue_r,blue_g,blue_b);
+		cr->fill_preserve();
+		cr->stroke();
+	}
+	cr->save();
+	cr->arc(x,y,r.rayon()*COEF_RAYON_INT,0,2*M_PI);
+	cr->set_source_rgb(red, green, blue);
+	cr->fill_preserve();
+	cr->stroke();
 }
 
-void MyArea::draw_player(const RefPtr<Context>& cr, Player p){
-    
-    
-    double cell = SIDE / p.nbCells();
-    double fr_count = p.count() / MAX_COUNT;
-    Point c = p.c_dessin();
-    double x = c.x();
-    double y = c.y();
-    
-    //Attention, changer les couleurs
-    double red[5]{0, 0.8, 0.8, 0.4, 0.0};
-    double green[5]{0, 0.0, 0.4, 0.4, 0.8};
-    double blue[5]{0, 0.0, 0.0, 0.0, 0.0};
-    
-    double a_0 = 3 * M_PI / 2; //ajouter commentaire "qu'est-ce que c'est"
-    double a_1 = a_0 + fr_count * M_PI * 2;
-    
-    cr->save();
-    cr->arc(x, y, COEF_RAYON_JOUEUR * cell, a_0, a_1);
-    cr->line_to(x, y);
-    cr->close_path();
-    cr->set_source_rgb(0.0, 0.0, 0.8);
-    cr->fill_preserve();
-    cr->stroke();
-    cr->save();
-    
-    a_0 = a_1;
-    a_1 = 7 * M_PI / 2;
-    cr->arc(x, y, COEF_RAYON_JOUEUR*cell, a_0, a_1);
-    cr->line_to(x, y);
-    cr->close_path();
-    cr->set_source_rgb(red[p.nbT()], green[p.nbT()], blue[p.nbT()]);
-    cr->fill_preserve();
-    cr->stroke();
-    
-    cr->save();
-    
-    //Attention, coef rayon = magic number (à modifier)
-    cr->arc(x, y, 0.6 * COEF_RAYON_JOUEUR * cell, 0, 2 * M_PI); 
-    cr->fill_preserve();
-    cr->stroke();
+void MyArea::draw(const Cairo::RefPtr<Cairo::Context>& cr,Rectangle r){
+
+	Point c = r.c1();
+	double x = c.x(),y = c.y();
+	
+	double largeur = r.largeur(), hauteur = r.hauteur();
+	
+	Couleur co = r.couleur();
+	double red = co.red(), green = co.green(), blue = co.blue();
+	
+	
+	cr->save();
+	cr->rectangle(x,y,largeur,hauteur);
+	cr->set_source_rgb(red, green, blue);
+	cr->fill_preserve();
+	cr->stroke();
 }
 
-void MyArea::draw_obstacle(const RefPtr<Context>& cr, Obstacle o){
-    
-    double cell = SIDE/o.nbCells();
-    Point c1 = o.coin_sup();
-    Point c2(c1.x(), c1.y() + cell);
-    Point c3(c1.x() + cell, c1.y() + cell);
-    Point c4(c1.x() + cell, c1.y());
-
-    cr->save();
-    cr->move_to(c1.x(), c1.y());
-    cr->line_to(c2.x(), c2.y());
-    cr->line_to(c3.x(), c3.y());
-    cr->line_to(c4.x(), c4.y());
-    cr->close_path();
-    cr->set_source_rgb(0.8, 0.0, 0.8);
-    cr->fill_preserve();
-    cr->stroke();
-}
     
 
 //--------------------------------------
