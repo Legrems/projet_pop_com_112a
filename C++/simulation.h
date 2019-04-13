@@ -22,6 +22,7 @@ class Simulation {
         std::vector<Obstacle> Obstacles;
         int nb_cell;
     public:
+        char * ERROR_MODE_KEYWORD = (char*)("Error");
         bool load_from_file(char * filepath);
         bool check_errors(bool start_game);
         void error(Error code);
@@ -37,12 +38,6 @@ class Simulation {
         bool detect_if_outside(std::vector<Player> p);
         bool detect_if_outside(std::vector<Ball> b);
         bool detect_if_outside(std::vector<Obstacle> o);
-
-        bool destroy_all_members();
-
-        std::vector<Player> get_players_to_draw();
-        std::vector<Ball> get_balls_to_draw();
-        std::vector<Obstacle> get_obstacles_to_draw();
 };
 
 #endif

@@ -46,34 +46,34 @@ Couleur Form::couleur(){return couleur_;}
 
 
 Rectangle::Rectangle ()
-		: Form(), c1_(0,0)
+		: Form(), p1_(0,0)
 		{}
 		
 Rectangle::Rectangle (Point a, Point b)
-		: Form(), c1_(a), c2_(a.x(),b.y()),c3_(b),c4_(a.y(),b.x())
+		: Form(), p1_(a), p2_(a.x(),b.y()),p3_(b),p4_(a.y(),b.x())
 		{}
 		
 Rectangle::Rectangle (Point a, Point b, Point c, Point d)
-		: Form(), c1_(a), c2_(b), c3_(c), c4_(d)
+		: Form(), p1_(a), p2_(b), p3_(c), p4_(d)
 		{}
 		
 Rectangle::Rectangle (Point a, double h, double l, Couleur c)
-		: Form(c), c1_(a), hauteur_(h), largeur_(l)
+		: Form(c), p1_(a), hauteur_(h), largeur_(l)
 		{}
 		
 
-Point Rectangle::c1(){return c1_;}
-Point Rectangle::c2(){return c2_;}
-Point Rectangle::c3(){return c3_;}
-Point Rectangle::c4(){return c4_;}
+Point Rectangle::c1(){return p1_;}
+Point Rectangle::c2(){return p2_;}
+Point Rectangle::c3(){return p3_;}
+Point Rectangle::c4(){return p4_;}
 double Rectangle::largeur(){return largeur_;}
 double Rectangle::hauteur(){return hauteur_;}
 
 
 bool Rectangle::appartient(Point a)
 {
-	double x[5] = {c1_.x(),c2_.x(),c3_.x(),c4_.x(),a.x()};
-	double y[5] = {c1_.y(),c2_.y(),c3_.y(),c4_.y(),a.y()};
+	double x[5] = {p1_.x(),p2_.x(),p3_.x(),p4_.x(),a.x()};
+	double y[5] = {p1_.y(),p2_.y(),p3_.y(),p4_.y(),a.y()};
 	
 	sort(x,x+5);
 	sort(y,y+5);
@@ -83,11 +83,7 @@ bool Rectangle::appartient(Point a)
 }
 		
 Rond::Rond(Point p, double r, Couleur c)
-		: Form(c), centre_(p), rayon_(r), fraction_(0)
-		{}
-		
-Rond::Rond(Point p, double r, Couleur c,double f)
-		: Form(c), centre_(p), rayon_(r), fraction_(f)
+		: Form(c), centre_(p), rayon_(r)
 		{}
 		
 void Rond::centre(Point p){centre_ = p;}
@@ -96,8 +92,20 @@ Point Rond::centre(){return centre_;}
 void Rond::rayon(double r){rayon_ = r;}
 double Rond::rayon(){return rayon_;}
 
-void Rond::fraction(double f){fraction_ = f;}
-double Rond::fraction(){return fraction_;}
+
+Arc::Arc(double r_ext, double r_int, double f, Couleur c)
+		: Form(c), rayon_ext_(r_ext), rayon_int_(r_int), fraction_(f)
+		{}
+		
+void Arc::rayon_ext(double r){rayon_ext_ = r;}
+double Arc::rayon_ext(){return rayon_ext_;}
+
+void Arc::rayon_int(double r){rayon_int_ = r;}
+double Arc::rayon_int(){return rayon_int_;}
+
+void Arc::fraction(double f){fraction_ = f;}
+double Arc::fraction(){return fraction_;}
+
 
 
 		

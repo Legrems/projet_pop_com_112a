@@ -65,10 +65,10 @@ class Form
 class Rectangle : public Form
 {
 	protected:
-		Point c1_;   //coordonnées des 4 coins du rectangle
-		Point c2_;
-		Point c3_;
-		Point c4_;
+		Point p1_;   //coordonnées des 4 coins du rectangle
+		Point p2_;
+		Point p3_;
+		Point p4_;
 		double hauteur_;
 		double largeur_;
 		
@@ -97,23 +97,38 @@ class Rond : public Form
 	protected:
 		Point centre_;
 		double rayon_;
-		double fraction_;
 		
 		
 	public:
 		Rond(Point p, double r, Couleur c);
-		Rond(Point p, double r, Couleur c,double f);
 		
 		void centre(Point p);
 		Point centre();
 		
 		void rayon(double r);
 		double rayon();
+};
+		
+class Arc : public Form
+{
+	protected:
+		double rayon_ext_;
+		double rayon_int_;
+		double fraction_;
+		
+	public:
+		Arc(double r_ext, double r_int, double f, Couleur c);
+		
+		void rayon_ext(double r);
+		double rayon_ext();
+		
+		void rayon_int(double r);
+		double rayon_int();
 		
 		void fraction(double f);
 		double fraction();
-};
 		
+};
 		
 
 double ecart(Point a,Point b);    //donne la distance entre 2 point

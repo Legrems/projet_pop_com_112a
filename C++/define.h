@@ -20,6 +20,4 @@
 
 #define MAXLINE				80
 
-
-#define COEF_RAYON_INT      0.7
 #endif

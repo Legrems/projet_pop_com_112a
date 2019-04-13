@@ -1,20 +1,14 @@
 # Definitions de macros
 
-# CC     = g++
-OUT = projet
-CXX = g++
-CXXFLAGS = -Wall -std=c++11 `pkg-config --cflags gtkmm-3.0`
-LINKING = `pkg-config --cflags gtkmm-3.0`
-LDLIBS = `pkg-config --libs gtkmm-3.0`
-CFILES = ball.cc gui.cc main.cc obstacle.cc player.cc simulation.cc tools.cc
-OFILES = ball.o  gui.o  main.o  obstacle.o  player.o  simulation.o  tools.o  
+CC     = g++
+CXXFLAGS = -Wall -std=c++11
+CFILES = ball.cc main.cc obstacle.cc player.cc simulation.cc tools.cc
+OFILES = ball.o  main.o  obstacle.o  player.o  simulation.o  tools.o  
 
 # Definition de la premiere regle
-all: $(OUT)
 
-
-$(OUT): $(OFILES)
-	$(CXX) $(CXXFLAGS) $(OFILES) -o $@ $(LDLIBS)
+projet: $(OFILES)
+	$(CC) $(OFILES) -o projet
 
 # Definitions de cibles particulieres
 
@@ -35,12 +29,10 @@ clean:
 #
 # -- Regles de dependances generees automatiquement
 #
-# DO NOT DELETE THIS LINball.o: ball.cc ball.h define.h tools.h player.h obstacle.h
+# DO NOT DELETE THIS LINE
 ball.o: ball.cc ball.h define.h tools.h player.h obstacle.h
-gui.o: gui.cc gui.h ball.h define.h tools.h player.h obstacle.h \
- simulation.h error.h enum.h
 main.o: main.cc simulation.h tools.h define.h player.h ball.h obstacle.h \
- error.h enum.h gui.h
+ error.h enum.h
 obstacle.o: obstacle.cc obstacle.h define.h tools.h ball.h player.h
 player.o: player.cc player.h define.h tools.h ball.h obstacle.h
 simulation.o: simulation.cc simulation.h tools.h define.h player.h ball.h \
