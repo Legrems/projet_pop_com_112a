@@ -45,6 +45,7 @@ class Obstacle {
 		
 		bool collide_with(Obstacle o);
 
+		Rectangle rectangle_();
 };
 		
 

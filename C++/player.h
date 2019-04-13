@@ -41,6 +41,8 @@ class Player{
 		bool collide_with(Ball b, double marge);
 	
 		bool collide_with(Obstacle o, double marge);
+		
+		Rond rond();
 	
 };
 		

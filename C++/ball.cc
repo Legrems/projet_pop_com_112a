@@ -3,7 +3,7 @@
 using namespace std;
 
 
-Ball::Ball(Point c, double a, int n)
+Ball::Ball(Point c, double a, double n)
 		: centre_(c), angle_(a), nbCells_(n), 
 		 c_dessin_(c.x()+DIM_MAX,DIM_MAX-c.y())
 		{}
@@ -12,8 +12,8 @@ Ball::Ball()
 		: angle_(0)
 		{}
 
-void Ball::nbCells(int n){nbCells_ = n;}
-int Ball::nbCells(){return nbCells_;}
+void Ball::nbCells(double n){nbCells_ = n;}
+double Ball::nbCells(){return nbCells_;}
 
 void Ball::centre(Point c){centre_ = c;}
 Point Ball::centre(){return centre_;}
@@ -56,7 +56,7 @@ bool Ball::collide_with(Obstacle o, double marge){
 	p3.x(o.colonne() + 1 + marge);
 	p3.y(o.ligne() + 1);
 		
-	Rectangle r_marge_vert (p1,p3);  //rectangle contenant l'obstacle et 
+	Rectangle r_marge_vert (p1, p3);  //rectangle contenant l'obstacle et 
 		                             //les marges verticales
 	p1.x(o.colonne());
 	p1.y(o.ligne() - marge);
@@ -74,10 +74,20 @@ bool Ball::collide_with(Obstacle o, double marge){
 	Point coin3(o.colonne() + 1,o.ligne());
 	Point coin4(o.colonne() + 1,o.ligne() + 1);
 		
-	if ((ecart(coin1, centre_))<(marge)){return true;}
-	if ((ecart(coin2, centre_))<(marge)){return true;}
-	if ((ecart(coin3, centre_))<(marge)){return true;}
-	if ((ecart(coin4, centre_))<(marge)){return true;}	
+	if ((ecart(coin1, centre_)) < (marge)){return true;}
+	if ((ecart(coin2, centre_)) < (marge)){return true;}
+	if ((ecart(coin3, centre_)) < (marge)){return true;}
+	if ((ecart(coin4, centre_)) < (marge)){return true;}	
 	
 	return false;
+}
+
+Rond Ball::rond()
+{
+	
+	double cell = SIDE / nbCells_;
+	// Not a magic number, just a random blue
+	Couleur blue_ball(0.1176, 0.5647, 1);
+	Rond r(c_dessin_, COEF_RAYON_BALLE * cell, blue_ball);
+	return r;
 }

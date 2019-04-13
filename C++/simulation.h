@@ -20,6 +20,11 @@ class Simulation {
         std::vector<Player> Players;
         std::vector<Ball> Balls;
         std::vector<Obstacle> Obstacles;
+
+        std::vector<Player> old_Players;
+        std::vector<Ball> old_Balls;
+        std::vector<Obstacle> old_Obstacles;
+
         int nb_cell;
     public:
         char * ERROR_MODE_KEYWORD = (char*)("Error");
@@ -38,6 +43,20 @@ class Simulation {
         bool detect_if_outside(std::vector<Player> p);
         bool detect_if_outside(std::vector<Ball> b);
         bool detect_if_outside(std::vector<Obstacle> o);
+
+        std::vector<Rectangle> get_rectangle_to_draw();
+        std::vector<Rond> get_rond_to_draw();
+
+        bool start();
+        bool stop();
+        bool step(int number_of_step);
+
+        bool write_members_to_file(char * filepath);
+
+        bool destroy_current_members();
+        bool destroy_old_members();
+        bool backup_members();
+        bool restore_old_members();
 };
 
 #endif

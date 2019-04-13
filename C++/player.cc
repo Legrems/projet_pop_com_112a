@@ -87,3 +87,22 @@ bool Player::collide_with(Obstacle o, double marge) {
 	return false;
 }
 
+
+Rond Player::rond()
+{
+	Couleur couleur1(0, 0, 0), couleur2(1, 0, 0), couleur3(1, 0.5, 0);
+	Couleur couleur4(1, 1, 0), couleur5(0, 1, 0);
+	Couleur couleur[5] = {couleur1, couleur2, couleur3, couleur4, 
+		                  couleur5};
+	double cell = SIDE / nbCells_;
+	double frac = count_ / MAX_COUNT;
+	
+	Rond r(c_dessin_, COEF_RAYON_JOUEUR * cell, couleur[nbT_], frac);
+	return r;
+}
+		                  
+	
+	
+	
+	
+	

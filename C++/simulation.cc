@@ -119,8 +119,8 @@ void Simulation::decodage_ligne(string line)
 	case NBBALL: 
 		if (!(data >> total)) error(UNKNOWN_FORMAT);
         else i = 0;
-		if (total != 0) etat = BALLS;
-        else etat = FIN;
+		if (total == 0) etat = FIN;
+        else etat = BALLS;
 	    break;
     
     case BALLS:{
@@ -321,4 +321,141 @@ bool Simulation::check_errors(bool start_game) {
     if (detect_if_outside(Obstacles)) return true;
 
     return false;
+}
+
+vector<Rectangle> Simulation::get_rectangle_to_draw(){
+    vector<Rectangle> my_rectangles;  
+    for (uint i = 0; i < Obstacles.size(); ++i) {
+        my_rectangles.push_back(Obstacles[i].rectangle_());
+    }
+
+    return my_rectangles;
+}
+
+vector<Rond> Simulation::get_rond_to_draw(){
+    vector<Rond> my_ronds;
+    for (uint i = 0; i < Players.size(); ++i) {
+        my_ronds.push_back(Players[i].rond());
+    }
+    for (uint i = 0; i < Balls.size(); ++i) {
+        my_ronds.push_back(Balls[i].rond());
+    }
+
+    return my_ronds;
+}
+
+bool Simulation::start(){
+    cout << "Start" << endl;
+    return true;
+}
+
+bool Simulation::stop(){
+    cout << "Stop" << endl;
+    return true;
+}
+
+bool Simulation::step(int number_of_step){
+    // Step of the simulation
+
+    for (uint i = 0; i < number_of_step; ++i){
+        cout << "Step " << i << endl;
+    }
+
+    return number_of_step;
+}
+
+
+bool Simulation::write_members_to_file(char * filepath){
+    fstream file_out;
+
+    file_out.open(filepath, fstream::out);
+
+    if (file_out){
+        file_out << "# NBCELL" << endl;
+        file_out << nb_cell << endl;
+
+        file_out << endl << "# Players" << endl;
+        file_out << Players.size() << endl;
+
+        for (uint i = 0; i < Players.size(); ++i) {
+            file_out << Players[i].centre().x() << " "
+                     << Players[i].centre().y() << " "
+                     << Players[i].nbT() << " "
+                     << Players[i].count() << endl;
+        }
+
+
+        file_out << endl << "# Obstacles" << endl;
+        file_out << Obstacles.size() << endl;
+
+        for (uint i = 0; i < Obstacles.size(); ++i) {
+            file_out << Obstacles[i].ligne() << " " 
+                     << Obstacles[i].colonne() << endl;
+        }
+
+        file_out << endl << "# Balls" << endl;
+        file_out << Balls.size() << endl;
+
+        for (uint i = 0; i < Balls.size(); ++i) {
+            file_out << Balls[i].centre().x() << " " 
+                     << Balls[i].centre().y() << " "
+                     << Balls[i].angle() << endl;
+        }
+
+        file_out.close();
+    }
+}
+
+
+bool Simulation::destroy_current_members(){
+    // Put the actual members in the olds, and "del" the new ones
+    backup_members();
+
+    Players.clear();
+    Balls.clear();
+    Obstacles.clear();
+    return true;
+}
+
+bool Simulation::destroy_old_members(){
+    // Delete old members
+    old_Players.clear();
+    old_Balls.clear();
+    old_Obstacles.clear();
+    return true;
+}
+
+bool Simulation::backup_members(){
+    // Delete old members, and put the actual in the old ones
+    destroy_old_members();
+
+    for (uint i = 0; i < Players.size(); ++i) {
+        old_Players.push_back(Players[i]);
+    }
+    for (uint i = 0; i < Balls.size(); ++i) {
+        old_Balls.push_back(Balls[i]);
+    }
+    for (uint i = 0; i < Obstacles.size(); ++i) {
+        old_Obstacles.push_back(Obstacles[i]);
+    }
+
+    return true;
+
+}
+
+bool Simulation::restore_old_members(){
+    // Delete the actual members with the old one
+    destroy_current_members();
+
+    for (uint i = 0; i < old_Players.size(); ++i) {
+        Players.push_back(old_Players[i]);
+    }
+    for (uint i = 0; i < old_Balls.size(); ++i) {
+        Balls.push_back(old_Balls[i]);
+    }
+    for (uint i = 0; i < old_Obstacles.size(); ++i) {
+        Obstacles.push_back(old_Obstacles[i]);
+    }
+
+
 }
