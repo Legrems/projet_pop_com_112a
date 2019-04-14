@@ -41,7 +41,7 @@ bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 void MyArea::draw(const Cairo::RefPtr<Cairo::Context>& cr, Rond r){
 
 	Point c = r.centre();
-	double x = c.x() + SIDE / 2, y = c.y() + SIDE / 2;
+	double x = c.x() + DIM_MAX, y = c.y() + DIM_MAX;
 	double blue_r(0.0), blue_g(0.0), blue_b(0.8);
 	
 	Couleur co = r.couleur();
@@ -181,13 +181,14 @@ void MyEvent::on_button_clicked_Open(){
             if (!is_error) {
             	// Pas d'erreur, good -> on affiche
             	cout << "Refreshing" << endl;
-            	m_Area.refresh();
 
             } else {
             	cout << "Restoring all members" << endl;
                 m_Area.simulation.restore_old_members();
                 // On restore les anciens membres
             }
+
+           	m_Area.refresh();
 
             break;
         }

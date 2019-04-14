@@ -3,6 +3,7 @@ time_w=0
 
 for i in {1..15}
 do
+	echo $i
 	if [ $i -gt 9 ]
 	then
    		./projet Error "errors/E$i.txt"

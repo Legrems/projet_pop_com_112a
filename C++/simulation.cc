@@ -134,8 +134,8 @@ void Simulation::decodage_ligne(string line, int nb_ligne)
         else ++i;
 		if (i == total)  etat = FIN;
         // Coordonnées en cellule (inversion d'axe Y !)
-        double new_x = (x + DIM_MAX) / SIDE * nb_cell;
-        double new_y = (DIM_MAX - y) / SIDE * nb_cell;
+        double new_x = (x + DIM_MAX) * nb_cell / SIDE;
+        double new_y = (DIM_MAX - y) * nb_cell / SIDE;
         Point c(new_x, new_y);
         Ball new_ball(c, angle, nb_cell);
         Balls.push_back(new_ball);
@@ -405,7 +405,7 @@ bool Simulation::write_members_to_file(char * filepath){
         file_out << Players.size() << endl;
 
         for (uint i = 0; i < Players.size(); ++i) {
-            file_out << Players[i].c_dessin().x() << " "
+            file_out << setprecision(10) << Players[i].c_dessin().x()  <<  " "
                      << Players[i].c_dessin().y() << " "
                      << Players[i].nbT() << " "
                      << Players[i].count() << endl;

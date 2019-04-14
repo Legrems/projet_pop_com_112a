@@ -31,7 +31,7 @@ int Player::nbCells(){return nbCells_;}
 bool Player::collide_with(Player p, double marge) {
 	double dist = 2 * COEF_RAYON_JOUEUR + marge;
 	
-	if (ecart(p.centre(), centre_) <= dist) {return true;}
+	if (ecart(p.centre(), centre_) < dist) {return true;}
 	
 	else{return false;}
 	
@@ -39,8 +39,8 @@ bool Player::collide_with(Player p, double marge) {
 
 bool Player::collide_with(Ball b, double marge) {
 	double dist = COEF_RAYON_JOUEUR + marge + COEF_RAYON_BALLE;
-	
-	if (ecart(b.centre(), centre_) <= dist) {return true;}
+
+	if (ecart(b.centre(), centre_) < dist) {return true;}
 	
 	else{return false;}
 	
