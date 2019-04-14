@@ -60,6 +60,7 @@ void MyArea::draw(const Cairo::RefPtr<Cairo::Context>& cr, Rond r){
 		a_1 = a_0 + 2 * fraction * M_PI;
 		cr->save();
 		cr->arc(x, y, r.rayon(), a_0, a_1);
+		cr->line_to(x,y);
 		cr->set_source_rgb(blue_r, blue_g, blue_b);
 		cr->fill_preserve();
 		cr->stroke();
