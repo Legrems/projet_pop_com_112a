@@ -1,7 +1,7 @@
 #!/bin/bash
 time_w=0
 
-for i in {0..15}
+for i in {1..15}
 do
 	if [ $i -gt 9 ]
 	then

@@ -5,6 +5,15 @@
 using namespace std;
 using namespace Gtk;
 
+void MyArea::refresh(){
+	auto win = get_window();
+	if (win){
+		Gdk::Rectangle r(0, 0,
+				get_allocation().get_width(),
+				get_allocation().get_height());
+		win->invalidate_rect(r, false);
+	}
+}
 
 bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
@@ -20,13 +29,19 @@ bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     for (uint i = 0; i < all_rond.size(); ++i){
     	draw(cr, all_rond[i]);
     }
-   
+
+    //draw(cr, Rond(Point(0, 0), 100, Couleur(1, 0, 1), 0.75));
+    //draw(cr, Rond(Point(200, 0), 100, Couleur(0, 1, 1), 0.25));
+    //draw(cr, Rond(Point(0, 200), 100, Couleur(1, 0, 0), 0.5));
+   	
+   	return true;
 }
+
 
 void MyArea::draw(const Cairo::RefPtr<Cairo::Context>& cr, Rond r){
 
 	Point c = r.centre();
-	double x = c.x(), y = c.y();
+	double x = c.x() + SIDE / 2, y = c.y() + SIDE / 2;
 	double blue_r(0.0), blue_g(0.0), blue_b(0.8);
 	
 	Couleur co = r.couleur();
@@ -41,8 +56,7 @@ void MyArea::draw(const Cairo::RefPtr<Cairo::Context>& cr, Rond r){
 	cr->fill_preserve();
 	cr->stroke();
 	
-	if(fraction != 0)
-	{
+	if (fraction != 0) {
 		a_1 = a_0 + 2 * fraction * M_PI;
 		cr->save();
 		cr->arc(x, y, r.rayon(), a_0, a_1);
@@ -156,23 +170,23 @@ void MyEvent::on_button_clicked_Open(){
             //Notice that this is a std::string, not a Glib::ustring.
             string filename = dialog.get_filename();
             cout << "File selected: " << filename << endl;
-
+ 
             m_Area.simulation.backup_members();
+            m_Area.simulation.destroy_current_members();
             m_Area.simulation.load_from_file((char *)(filename.c_str()));
-            if (!m_Area.simulation.check_errors(true)) {
+            bool is_error = m_Area.simulation.check_errors(true);
+            cout << is_error << endl;
+            if (!is_error) {
             	// Pas d'erreur, good -> on affiche
-            	cout << "Show all children" << endl;
-            	// Marche pas, je sais pas comment re-afficher ici
-            	// Jai teste :
-            	// m_Area.show();
-            	// m_Area.show_now();
-            	// show_all_children();
-            	m_Area.show_all();
+            	cout << "Refreshing" << endl;
+            	m_Area.refresh();
+
             } else {
             	cout << "Restoring all members" << endl;
                 m_Area.simulation.restore_old_members();
                 // On restore les anciens membres
             }
+
             break;
         }
         case(RESPONSE_CANCEL):{
@@ -230,4 +244,7 @@ void MyEvent::on_button_clicked_Start_Stop(){
 
 void MyEvent::on_button_clicked_Step(){
 	m_Area.simulation.step(1);
+	m_Area.simulation.print_players();
+	m_Area.simulation.print_balls();
+	m_Area.simulation.print_obstacles();
 }

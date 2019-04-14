@@ -7,8 +7,9 @@ Player::Player()
 		: nbT_(0)
 		{}
 Player::Player(Point c, int n, double co, int nc)
-		: centre_(c),nbT_(n),count_(co),nbCells_(nc),
-		c_dessin_(c.x()+DIM_MAX,DIM_MAX-c.y())
+		: centre_(c), nbT_(n), count_(co), nbCells_(nc),
+		c_dessin_(c.x() * SIDE / nc - DIM_MAX,
+		 		  DIM_MAX - c.y() * SIDE / nc)
 		{}		
 
 void Player::centre(Point c) {centre_ = c;}

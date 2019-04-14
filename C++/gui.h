@@ -14,6 +14,7 @@ public:
 
   void draw(const Cairo::RefPtr<Cairo::Context>& cr,Rond r);
   void draw(const Cairo::RefPtr<Cairo::Context>& cr,Rectangle r);
+  void refresh();
 
 
 protected:

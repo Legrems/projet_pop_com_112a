@@ -5,7 +5,8 @@ using namespace std;
 
 Ball::Ball(Point c, double a, double n)
 		: centre_(c), angle_(a), nbCells_(n), 
-		 c_dessin_(c.x()+DIM_MAX,DIM_MAX-c.y())
+		 c_dessin_(c.x() * SIDE / n - DIM_MAX,
+		 		   c.y() * SIDE / n + DIM_MAX)
 		{}
 
 Ball::Ball()
@@ -69,10 +70,10 @@ bool Ball::collide_with(Obstacle o, double marge){
 	if (r_marge_vert.appartient(centre_)){return true;}
 	if (r_marge_horiz.appartient(centre_)){return true;}
 		
-	Point coin1(o.colonne(),o.ligne());       //4 coins de l'obstacle
+	Point coin1(o.colonne(), o.ligne());       //4 coins de l'obstacle
 	Point coin2(o.colonne(), o.ligne() + 1);
-	Point coin3(o.colonne() + 1,o.ligne());
-	Point coin4(o.colonne() + 1,o.ligne() + 1);
+	Point coin3(o.colonne() + 1, o.ligne());
+	Point coin4(o.colonne() + 1, o.ligne() + 1);
 		
 	if ((ecart(coin1, centre_)) < (marge)){return true;}
 	if ((ecart(coin2, centre_)) < (marge)){return true;}
