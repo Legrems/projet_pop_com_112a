@@ -406,7 +406,7 @@ bool Simulation::write_members_to_file(char * filepath){
 
         for (uint i = 0; i < Players.size(); ++i) {
             file_out << setprecision(10) << Players[i].c_dessin().x()  <<  " "
-                     << Players[i].c_dessin().y() << " "
+                     << -Players[i].c_dessin().y() << " "
                      << Players[i].nbT() << " "
                      << Players[i].count() << endl;
         }
@@ -425,7 +425,7 @@ bool Simulation::write_members_to_file(char * filepath){
 
         for (uint i = 0; i < Balls.size(); ++i) {
             file_out << Balls[i].c_dessin().x() << " " 
-                     << Balls[i].c_dessin().y() << " "
+                     << -Balls[i].c_dessin().y() << " "
                      << Balls[i].angle() << endl;
         }
 

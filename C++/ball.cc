@@ -6,7 +6,7 @@ using namespace std;
 Ball::Ball(Point c, double a, double n)
 		: centre_(c), angle_(a), nbCells_(n), 
 		 c_dessin_(c.x() * SIDE / n - DIM_MAX,
-		 		   DIM_MAX - c.y() * SIDE / n)
+		 		   -(DIM_MAX - c.y() * SIDE / n))
 		{}
 
 Ball::Ball()
