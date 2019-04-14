@@ -29,7 +29,7 @@ class MyEvent : public Gtk::Window
 public:
     MyEvent();
     virtual ~MyEvent();
-    void load_from_file(char * filename);
+    bool load_from_file(char * filename);
 
 protected:
     void on_button_clicked_Exit();
