@@ -26,12 +26,14 @@ class Simulation {
         std::vector<Obstacle> old_Obstacles;
 
         int nb_cell;
+
+        int old_nb_cell;
     public:
         char * ERROR_MODE_KEYWORD = (char*)("Error");
         bool load_from_file(char * filepath);
         bool check_errors(bool start_game);
         void error(Error code);
-        void decodage_ligne(std::string line);
+        void decodage_ligne(std::string line, int nb_ligne);
         void print_players();
         void print_balls();
         void print_obstacles();

@@ -6,13 +6,15 @@ using namespace std;
 bool Simulation::load_from_file(char * filepath) {
     string line;
     ifstream file(filepath); 
+    int nb_ligne = 0;
     if (!file.fail()) {
         while (getline(file >> ws,line)) {
 			// comment line, ignore it
 			if (line[0] == '#') {
                 continue; 
             }
-            decodage_ligne(line);
+            decodage_ligne(line, nb_ligne);
+            nb_ligne++;
         }
 	} else {
         error(READ_OPEN);
@@ -58,7 +60,7 @@ void Simulation::error(Error code) {
 	}
 }
 
-void Simulation::decodage_ligne(string line)
+void Simulation::decodage_ligne(string line, int nb_ligne)
 {
 	istringstream data(line);
 	// states of the automate				 
@@ -71,6 +73,10 @@ void Simulation::decodage_ligne(string line)
 	static int i(0), total(0);
     double x(0), y(0), nbt(0), count(0);
     double angle(0);
+
+    if (nb_ligne == 0){
+        etat = NBCELL;
+    }
 
 	switch(etat) 
 	{
@@ -341,7 +347,6 @@ bool Simulation::check_errors(bool start_game) {
     if (detect_if_outside(Balls)) return true;
     if (detect_if_outside(Obstacles)) return true;
 
-    cout << "No error" << endl;
     return false;
 }
 
@@ -437,6 +442,7 @@ bool Simulation::destroy_current_members(){
     Players.clear();
     Balls.clear();
     Obstacles.clear();
+    nb_cell = 0;
     return true;
 }
 
@@ -445,6 +451,7 @@ bool Simulation::destroy_old_members(){
     old_Players.clear();
     old_Balls.clear();
     old_Obstacles.clear();
+    old_nb_cell = 0;
     return true;
 }
 
@@ -461,6 +468,8 @@ bool Simulation::backup_members(){
     for (uint i = 0; i < Obstacles.size(); ++i) {
         old_Obstacles.push_back(Obstacles[i]);
     }
+
+    old_nb_cell = nb_cell;
 
     return true;
 
@@ -479,6 +488,8 @@ bool Simulation::restore_old_members(){
     for (uint i = 0; i < old_Obstacles.size(); ++i) {
         Obstacles.push_back(old_Obstacles[i]);
     }
+
+    nb_cell = old_nb_cell;
 
     return true;
 }

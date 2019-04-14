@@ -175,8 +175,9 @@ void MyEvent::on_button_clicked_Open(){
             m_Area.simulation.backup_members();
             m_Area.simulation.destroy_current_members();
             m_Area.simulation.load_from_file((char *)(filename.c_str()));
+
             bool is_error = m_Area.simulation.check_errors(true);
-            cout << is_error << endl;
+            // cout << is_error << endl;
             if (!is_error) {
             	// Pas d'erreur, good -> on affiche
             	cout << "Refreshing" << endl;
@@ -245,7 +246,4 @@ void MyEvent::on_button_clicked_Start_Stop(){
 
 void MyEvent::on_button_clicked_Step(){
 	m_Area.simulation.step(1);
-	m_Area.simulation.print_players();
-	m_Area.simulation.print_balls();
-	m_Area.simulation.print_obstacles();
 }
