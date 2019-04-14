@@ -24,10 +24,11 @@ int main(int argc, char * argv[]){
     }
 
     else if (argc == 3 and argv[1] == string(ERROR_MODE_KEYWORD)){
-    	Simulation simulation;
+        Simulation simulation;
 
-    	simulation.load_from_file(argv[2]);
-    	simulation.check_errors(true);
+        if (simulation.load_from_file(argv[2])){
+            simulation.check_errors(true);
+        }
     }
 
 	return 0;
