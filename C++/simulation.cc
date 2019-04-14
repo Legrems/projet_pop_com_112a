@@ -347,6 +347,8 @@ bool Simulation::check_errors(bool start_game) {
     if (detect_if_outside(Balls)) return true;
     if (detect_if_outside(Obstacles)) return true;
 
+    cout << FILE_READING_SUCCESS << endl;
+
     return false;
 }
 
