@@ -18,7 +18,8 @@ void MyArea::refresh(){
 bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
     cr->set_line_width(1.0);
-
+	cr->set_source_rgb(1.0,1.0,1.0);
+	cr->paint();
     vector<Rectangle> all_rectangle = simulation.get_rectangle_to_draw();
     vector<Rond> all_rond = simulation.get_rond_to_draw();
 
@@ -29,11 +30,11 @@ bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     for (uint i = 0; i < all_rond.size(); ++i){
     	draw(cr, all_rond[i]);
     }
+    
+    cr->set_source_rgb(0.0,0.0,0.0);
+    cr->rectangle(0,0,SIDE,SIDE);
+    cr->stroke();
 
-    //draw(cr, Rond(Point(0, 0), 100, Couleur(1, 0, 1), 0.75));
-    //draw(cr, Rond(Point(200, 0), 100, Couleur(0, 1, 1), 0.25));
-    //draw(cr, Rond(Point(0, 200), 100, Couleur(1, 0, 0), 0.5));
-   	
    	return true;
 }
 
@@ -48,7 +49,7 @@ void MyArea::draw(const Cairo::RefPtr<Cairo::Context>& cr, Rond r){
 	double red = co.red(), green = co.green(), blue = co.blue();
 	
 	double fraction = r.fraction();
-	double a_0 = 3 * M_PI / 2, a_1;
+	double a_0 = 3 * M_PI / 2, a_1;   //a_0 = 270 degré
 	
 	cr->save();
 	cr->arc(x, y, r.rayon(), 0, 2 * M_PI);
@@ -95,9 +96,8 @@ void MyArea::draw(const Cairo::RefPtr<Cairo::Context>& cr, Rectangle r){
 //--------------------------------------
 
 MyEvent::MyEvent() :
-//Attention, marge = magic number
-    m_Box(ORIENTATION_VERTICAL, 10),
-    m_Box_Top(ORIENTATION_HORIZONTAL, 10),
+    m_Box(ORIENTATION_VERTICAL),
+    m_Box_Top(ORIENTATION_HORIZONTAL),
 
     m_Label_Top("No game to run"),
     m_Button_Exit("Exit"),
