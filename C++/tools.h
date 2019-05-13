@@ -3,6 +3,8 @@
 
 #include "define.h"
 
+bool est_entre(double a, double b, double c);
+
 class Couleur
 {
 	protected:
@@ -24,7 +26,7 @@ class Couleur
 		
 };
 		
-		
+class Rectangle;		
 		
 class Point
 {
@@ -43,8 +45,37 @@ class Point
 		double x();
 		double y();
 		
+		Rectangle rect(Point p2, double largeur);
+
 };
 
+class Droite
+{
+	protected: 
+		Point p1_, p2_;
+		bool vertical_;
+		double pente_;
+		double hauteur_;
+		
+	public:
+	
+		Droite();
+		Droite(Point p1, Point p2);
+	
+		Point p1();
+		Point p2();
+		void p1(Point p);
+		void p2(Point p);
+		bool vertical();
+		double pente();
+		double hauteur();
+		
+		void set_equation();
+		
+		bool collide_with(Droite d);
+		
+		
+};
 
 
 class Form
@@ -90,7 +121,11 @@ class Rectangle : public Form
 		
 		
 		bool appartient(Point a);   //renvoie true si le point est dans 
-};                                  //le rectangle
+	                                //le rectangle
+		bool collide_with(Droite d);
+		bool collide_with(Rectangle rect);//renvoie true si les deux 
+                                          //rectangles sont en collision
+};
 		
 class Rond : public Form
 {

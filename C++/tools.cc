@@ -1,8 +1,19 @@
 #include "tools.h"
 #include <cmath>
+#include <iostream>
 #include <algorithm>
 using namespace std;
 
+bool est_entre(double a, double b, double c)
+{
+	double list[3] = {a, b, c};
+	sort(list, list+3);
+	if (list[1] == a){return true;}
+	return false;
+}
+		
+		
+		
 Couleur::Couleur (double r, double g, double b)
 		: red_(r), green_(g), blue_(b)
 		{}
@@ -21,7 +32,7 @@ Point::Point()
 		: x_(0),y_(0)
 		{}
 Point::Point (double x, double y)
-		  : x_(x), y_(y)
+		: x_(x), y_(y)
 		{}
 	
 
@@ -30,7 +41,108 @@ void Point::x(double new_x){x_ = new_x;}
 void Point::y(double new_y){y_ = new_y;}
 
 double Point::x(){return x_;}
-double Point::y(){return y_;}		
+double Point::y(){return y_;}	
+
+
+Rectangle Point::rect(Point p2, double largeur){
+	
+	double a = p2.x()-x_;  //vecteur qui relier les 2 points
+	double b = p2.y()-y_;  
+	
+	double norme_vect_perp = sqrt((b*b)/(a*a)+1);
+	
+	double vect_perp_x = 1/norme_vect_perp;
+	double vect_perp_y = -(b/a)/ norme_vect_perp;
+	
+	vect_perp_x *= largeur/2;
+	vect_perp_y *= largeur/2;
+	
+	Point c1 (x_-vect_perp_x,y_-vect_perp_y);
+	Point c2 (x_+vect_perp_x,y_+vect_perp_y);
+	Point c3 (p2.x()-vect_perp_x,p2.y()-vect_perp_y);
+	Point c4 (p2.x()+vect_perp_x,p2.y()+vect_perp_y);
+	
+	return Rectangle(c1,c2,c3,c4);
+}
+
+Droite::Droite()
+		:p1_(0,0), p2_(0,0)
+		{}
+		
+Droite::Droite(Point p1, Point p2)
+		:p1_(p1),p2_(p2)
+		{}
+		
+		
+Point Droite::p1(){return p1_;}
+Point Droite::p2(){return p2_;}
+bool Droite::vertical(){return vertical_;}
+double Droite::pente(){return pente_;}
+double Droite::hauteur(){return hauteur_;}
+
+
+void Droite::p1(Point p){p1_ = p;}
+void Droite::p2(Point p){p2_ = p;}
+		
+void Droite::set_equation()
+{
+	double x = p2_.x() - p1_.x();
+	double y = p2_.y() - p1_.y();
+	
+	if (x == 0)
+	{
+		vertical_ = true;
+		return;
+	}
+	
+	vertical_ = false;
+	pente_ = y/x;
+	hauteur_ = p1_.y() - pente_ * p1_.x();
+	return;
+}
+
+bool Droite::collide_with(Droite d)
+{	
+	d.set_equation();
+	set_equation();
+	
+	double d1_x1 = p1_.x(), d1_x2 = p2_.x(), d2_x1 = d.p1().x();
+	double d2_x2 = d.p2().x(), d1_y1 = p1_.y(), d1_y2 = p2_.y();
+	double  d2_y1 = d.p1().y(), d2_y2 = d.p2().y();
+	
+	if (vertical_){
+		if (est_entre(d1_x1,d2_x1,d2_x2)){
+			if (d.vertical()){
+				if ((est_entre(d1_y1,d2_y1,d2_y2))||
+				   (est_entre(d1_y2,d2_y1,d2_y2))){return true;}
+				else{return false;}}
+			double y = d.pente()*d1_x1+d.hauteur();
+			if ((est_entre(y,d1_y1,d1_y2))&&(est_entre(y,d2_y1,d2_y2))){
+				return true;}
+				else{ return false;}}}
+		
+	if(d.vertical()){
+		if (est_entre(d2_x1,d1_x1,d1_x2)){
+			double y = pente_*d2_x1+hauteur_;
+			if ((est_entre(y,d2_y1,d2_y2))&&(est_entre(y,d1_y1,d1_y2))){
+				return true;}}
+		else{return false;}}
+		
+	if (d.pente()==pente_){
+		if((hauteur_ == d.hauteur())&&((est_entre(d1_y1,d2_y1,d2_y2))||
+		  (est_entre(d1_y2,d2_y1,d2_y2)))){return true;}
+		else {return false;}}
+		
+	double x = (d.hauteur()-hauteur_)/(pente_-d.pente());
+	
+	if ((est_entre(x,d1_x1,d1_x2))&&(est_entre(x,d2_x1,d2_x2))){
+		return true;}
+		else {return false;}
+	return false;
+}
+
+
+
 
 Form::Form()
 		:couleur_(0,0,0)
@@ -58,7 +170,8 @@ Rectangle::Rectangle (Point a, Point b, Point c, Point d)
 		{}
 		
 Rectangle::Rectangle (Point a, double h, double l, Couleur c)
-		: Form(c), c1_(a), hauteur_(h), largeur_(l)
+		: Form(c), c1_(a), c2_(a.x()+l,a.y()), c3_(a.x(),a.y()+h),
+		  c4_(a.x()+l,a.y()+h),  hauteur_(h), largeur_(l)
 		{}
 		
 
@@ -81,6 +194,40 @@ bool Rectangle::appartient(Point a)
 	if ((x[2]==a.x())&&(y[2]==a.y())){return true;}
 	else {return false;}
 }
+
+bool Rectangle::collide_with(Droite d)
+{
+	Droite d2(c1_,c2_), d3(c1_,c3_), d4(c1_,c4_), d5(c2_,c3_);
+	Droite d6(c2_,c4_),d7(c3_,c4_);
+	if (d.collide_with(d2)){return true;}
+	if (d.collide_with(d3)){return true;}
+	if (d.collide_with(d4)){return true;}
+	if (d.collide_with(d5)){return true;}
+	if (d.collide_with(d6)){return true;}
+	if (d.collide_with(d7)){return true;}
+	return false;
+}
+	
+	
+
+
+bool Rectangle::collide_with(Rectangle rect)
+{
+	Droite d1(c1_,c2_), d2(c1_,c3_), d3(c1_,c4_), d4(c2_,c3_);
+	Droite d5(c2_,c4_),d6(c3_,c4_);
+	
+	if (rect.collide_with(d1)){return true;}
+	if (rect.collide_with(d2)){return true;}
+	if (rect.collide_with(d3)){return true;}
+	if (rect.collide_with(d4)){return true;}
+	if (rect.collide_with(d5)){return true;}
+	if (rect.collide_with(d6)){return true;}
+	
+	return false;
+	
+}
+				
+	
 		
 Rond::Rond(Point p, double r, Couleur c)
 		: Form(c), centre_(p), rayon_(r), fraction_(0)
