@@ -110,6 +110,8 @@ class Rectangle : public Form
 		
 		Rectangle (Point a, Point b, Point c, Point d);
 		
+		Rectangle (Point p1, Point p2, double largeur);
+		
 		Rectangle (Point a, double h, double l, Couleur c);
 		
 		Point c1();   //donne les coordonnée des 4 coins

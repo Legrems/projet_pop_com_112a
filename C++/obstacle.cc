@@ -132,4 +132,14 @@ Rectangle Obstacle::rectangle_()
 	return r;
 }
 
+Rectangle Obstacle::rectangle_cell()
+{
+	
+	Couleur red_obstacle(0.5, 0, 0);
+	
+	Point p(colonne_,ligne_);
+	Rectangle r(p, 1, 1, red_obstacle);
+	return r;
+}
+
 

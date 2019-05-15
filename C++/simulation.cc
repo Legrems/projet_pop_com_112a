@@ -375,6 +375,10 @@ vector<Rond> Simulation::get_rond_to_draw(){
 
 bool Simulation::start(){
     cout << "Start" << endl;
+    
+    run_player();
+    
+    
     return true;
 }
 
@@ -494,4 +498,43 @@ bool Simulation::restore_old_members(){
     nb_cell = old_nb_cell;
 
     return true;
+}
+
+
+void Simulation::run_player()
+{
+	
+	for (int i(0); i < Players.size(); i++)
+    {
+		int target = Players[i].target(Players);
+		
+		
+		
+		cout<<"Le joueur "<<i+1<<" qui a "<<Players[i].nbT()<<" vie, a pour cible le joueur "<<target+1<<" qui a "<<Players[target].nbT()<<" vie"<<endl;
+		cout<<"L'axe entre les deux joueurs est ";
+		if (visible(Players[i],Players[target]))
+		{
+			cout<<"dégagé"<<endl<<endl;
+		}
+		else{cout<<"obstrué"<<endl<<endl;}
+		
+	}
+	
+}
+
+bool Simulation::visible(Player p1, Player p2)
+{
+	Point c1 ((p1.c_dessin().x()+DIM_MAX),(p1.c_dessin().y()+DIM_MAX));
+	Point c2 ((p2.c_dessin().x()+DIM_MAX),(p2.c_dessin().y()+DIM_MAX));
+	Rectangle rect(c1,c2,2*(COEF_RAYON_JOUEUR+COEF_MARGE_JEU)*nb_cell);
+	
+	
+	for (int i(0); i < Obstacles.size(); i++)
+	{
+		if (rect.collide_with(Obstacles[i].rectangle_()))
+		{
+			return false;
+		}
+	}
+	return true;
 }

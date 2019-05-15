@@ -60,6 +60,9 @@ class Simulation {
         bool destroy_old_members();
         bool backup_members();
         bool restore_old_members();
+        
+        void run_player();
+        bool visible(Player p1, Player p2);
 };
 
 #endif

@@ -44,25 +44,29 @@ double Point::x(){return x_;}
 double Point::y(){return y_;}	
 
 
-Rectangle Point::rect(Point p2, double largeur){
+Rectangle::Rectangle(Point p1,Point p2, double largeur)
+		:c1_(0,0),c2_(0,0),c3_(0,0),c4_(0,0)
+{
 	
-	double a = p2.x()-x_;  //vecteur qui relier les 2 points
-	double b = p2.y()-y_;  
+	double a = p2.x()-p1.x();  //vecteur qui relier les 2 points
+	double b = p2.y()-p1.y();  
 	
-	double norme_vect_perp = sqrt((b*b)/(a*a)+1);
+	double norme_vect_perp = sqrt((b*b)+(a*a));
 	
-	double vect_perp_x = 1/norme_vect_perp;
-	double vect_perp_y = -(b/a)/ norme_vect_perp;
+	double vect_perp_x = b/norme_vect_perp;
+	double vect_perp_y = -a/norme_vect_perp;
 	
 	vect_perp_x *= largeur/2;
 	vect_perp_y *= largeur/2;
 	
-	Point c1 (x_-vect_perp_x,y_-vect_perp_y);
-	Point c2 (x_+vect_perp_x,y_+vect_perp_y);
-	Point c3 (p2.x()-vect_perp_x,p2.y()-vect_perp_y);
-	Point c4 (p2.x()+vect_perp_x,p2.y()+vect_perp_y);
+	Point c1(p1.x()-vect_perp_x,p1.y()-vect_perp_y);
+	Point c2(p1.x()+vect_perp_x,p1.y()+vect_perp_y);
+	Point c3(p2.x()-vect_perp_x,p2.y()-vect_perp_y);
+	Point c4(p2.x()+vect_perp_x,p2.y()+vect_perp_y);
 	
-	return Rectangle(c1,c2,c3,c4);
+	c1_ = c1; c2_ = c2; c3_ = c3; c4_ = c4;
+	
+	
 }
 
 Droite::Droite()

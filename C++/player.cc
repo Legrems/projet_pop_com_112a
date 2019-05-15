@@ -1,4 +1,5 @@
 #include "player.h"
+#include <vector>
 
 using namespace std;
 
@@ -102,6 +103,28 @@ Rond Player::rond()
 	return r;
 }
 		                  
+int Player::target(vector<Player> liste_joueur){
+	int target = 0;
+	double dist_to_target = 3*DIM_MAX;
+	
+	for (int i(0); i < liste_joueur.size(); i++)
+	{
+		double distance = ecart(centre_, liste_joueur[i].centre());
+		
+		if (distance > COEF_MARGE_JEU)
+		{
+			if (distance < dist_to_target)
+			{
+				target = i;
+				dist_to_target = ecart(centre_, liste_joueur[i].centre());
+			}
+			
+		}
+	}
+	
+	return target;
+		
+}
 	
 	
 	

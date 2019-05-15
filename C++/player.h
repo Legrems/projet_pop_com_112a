@@ -5,6 +5,7 @@
 #include "tools.h"
 #include "ball.h"
 #include "obstacle.h"
+#include <vector>
 
 class Ball;
 class Obstacle;
@@ -43,6 +44,8 @@ class Player{
 		bool collide_with(Obstacle o, double marge);
 		
 		Rond rond();
+		
+		int target(std::vector<Player> liste_joueur);
 	
 };
 		
