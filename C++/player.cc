@@ -107,7 +107,7 @@ int Player::target(vector<Player> &liste_joueur){
 	int target = 0;
 	double dist_to_target = 3*DIM_MAX;
 	
-	for (int i(0); i < liste_joueur.size(); i++)
+	for (uint i(0); i < liste_joueur.size(); i++)
 	{
 		double distance = ecart(centre_, liste_joueur[i].centre());
 		
@@ -144,7 +144,7 @@ void Player::add_count(){
 bool Player::collide_with(std::vector<Ball> &Balls)
 {
 	double marge = COEF_MARGE_JEU*SIDE/nbCells_;
-	for (int i(0); i < Balls.size(); i++)
+	for (uint i(0); i < Balls.size(); i++)
 	{
 		if (this->collide_with(Balls[i],marge)){return true;}
 	}

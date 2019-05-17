@@ -14,10 +14,11 @@ class Player{
 	
 	private:
 		
-		int nbCells_;
+		
+		Point centre_;   //coordonnée du centre
 		int nbT_;        //nombre de touche restante
 		double count_;   //compteur avant prochain tir
-		Point centre_;   //coordonnée du centre
+		int nbCells_;
 		Point c_dessin_; //centre dans gtkmm
 		
 	public:

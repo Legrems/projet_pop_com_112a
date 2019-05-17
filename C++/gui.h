@@ -43,12 +43,13 @@ protected:
     MyArea              m_Area;
     Gtk::Box            m_Box;
     Gtk::Box            m_Box_Top;
+    Gtk::Label          m_Label_Top;
     Gtk::Button         m_Button_Exit;
     Gtk::Button         m_Button_Open;
     Gtk::Button         m_Button_Save;
     Gtk::Button         m_Button_Start_Stop;
     Gtk::Button         m_Button_Step;
-    Gtk::Label          m_Label_Top;
+    
     
   
 private:

@@ -42,14 +42,13 @@ class Simulation {
         
         // This is the standard prototype of the Timer callback function
         bool on_timeout(); 
-        
-  
-		// to store a timer disconnect request
-		bool disconnect;
 		
 
 		// This constant is initialized in the constructor's member initializer:
 		const int timeout_value;
+		
+		// to store a timer disconnect request
+		bool disconnect;
         
         
         //fin test timer

@@ -103,7 +103,7 @@ void Ball::move(double move_x, double move_y)
 bool Ball::collide_with(std::vector<Obstacle> &Obstacles)
 {
 	double marge = COEF_MARGE_JEU*SIDE/nbCells_;
-	for (int i(0); i < Obstacles.size(); i++)
+	for (uint i(0); i < Obstacles.size(); i++)
 	{
 		if (this->collide_with(Obstacles[i], marge)){return true;}
 	}
@@ -112,7 +112,7 @@ bool Ball::collide_with(std::vector<Obstacle> &Obstacles)
 bool Ball::collide_with(std::vector<Player> &Players)
 {
 	double marge = COEF_MARGE_JEU*SIDE/nbCells_;
-	for (int i(0); i < Players.size(); i++)
+	for (uint i(0); i < Players.size(); i++)
 	{
 		if (this->collide_with(Players[i], marge)){return true;}
 	}
@@ -121,7 +121,7 @@ bool Ball::collide_with(std::vector<Player> &Players)
 bool Ball::collide_with(std::vector<Ball> &Balls)
 {
 	double marge = COEF_MARGE_JEU*SIDE/nbCells_;
-	for (int i(0); i < Balls.size(); i++)
+	for (uint i(0); i < Balls.size(); i++)
 	{
 		if (this->collide_with(Balls[i], marge))
 		{
