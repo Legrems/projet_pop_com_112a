@@ -95,6 +95,43 @@ Rond Ball::rond()
 
 void Ball::move(double move_x, double move_y)
 {
-	centre_.move(move_x,move_y);
+	double cell = SIDE/nbCells_;
+	centre_.move(move_x/cell,move_y/cell);
 	c_dessin_.move(move_x,-move_y);
 }
+
+bool Ball::collide_with(std::vector<Obstacle> &Obstacles)
+{
+	double marge = COEF_MARGE_JEU*SIDE/nbCells_;
+	for (int i(0); i < Obstacles.size(); i++)
+	{
+		if (this->collide_with(Obstacles[i], marge)){return true;}
+	}
+	return false;
+}
+bool Ball::collide_with(std::vector<Player> &Players)
+{
+	double marge = COEF_MARGE_JEU*SIDE/nbCells_;
+	for (int i(0); i < Players.size(); i++)
+	{
+		if (this->collide_with(Players[i], marge)){return true;}
+	}
+	return false;
+}
+bool Ball::collide_with(std::vector<Ball> &Balls)
+{
+	double marge = COEF_MARGE_JEU*SIDE/nbCells_;
+	for (int i(0); i < Balls.size(); i++)
+	{
+		if (this->collide_with(Balls[i], marge))
+		{
+			if (!((Balls[i].c_dessin().x() == c_dessin_.x())&&
+			    (Balls[i].c_dessin().y() == c_dessin_.y())))
+			    {
+					return true;
+				}
+			}
+		}
+	return false;
+}
+

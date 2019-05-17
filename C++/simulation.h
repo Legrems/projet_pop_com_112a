@@ -27,6 +27,10 @@ class Simulation {
         std::vector<Player> old_Players;
         std::vector<Ball> old_Balls;
         std::vector<Obstacle> old_Obstacles;
+        
+        std::vector<int> player_to_delete;
+        std::vector<int> ball_to_delete;
+        std::vector<int> obstacle_to_delete;
 
         int nb_cell;
 
@@ -78,7 +82,7 @@ class Simulation {
 
         bool start();
         bool stop();
-        bool step(int number_of_step);
+        bool step(uint number_of_step);
 
         bool write_members_to_file(char * filepath);
 
@@ -96,7 +100,7 @@ class Simulation {
         void run_player();
 		void move_ball();
         
-        void lose_life(Player &p);
+        void lose_life(Player &p, int i);
         
         bool visible(Player p1, Player p2);
 };

@@ -45,6 +45,10 @@ class Ball {
 	
 		bool collide_with(Obstacle o, double marge);
 		
+		bool collide_with(std::vector<Player> &Players);
+		bool collide_with(std::vector<Ball> &Balls);
+		bool collide_with(std::vector<Obstacle> &Obstacles);
+		
 		Rond rond();
 		
 		void move(double move_x, double move_y);

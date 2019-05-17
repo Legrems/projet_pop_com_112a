@@ -47,6 +47,8 @@ class Obstacle {
 
 		Rectangle rectangle_();
 		Rectangle rectangle_cell();
+		
+		bool collide_with(std::vector<Ball> &Balls);
 };
 		
 

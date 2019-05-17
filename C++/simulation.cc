@@ -406,7 +406,7 @@ bool Simulation::stop(){
     return true;
 }
 
-bool Simulation::step(int number_of_step){
+bool Simulation::step(uint number_of_step){
     // Step of the simulation
 
     for (uint i = 0; i < number_of_step; ++i){
@@ -523,22 +523,31 @@ bool Simulation::restore_old_members(){
 
 void Simulation::run_player()
 {
-	cout<<"Run Player"<<endl<<endl;
 	
-	for (int i(0); i < Players.size(); i++)
+	for (uint i(0); i < Players.size(); i++)
     {
 		int target = Players[i].target(Players);
 		
-		
-		
-		cout<<"Le joueur "<<i+1<<" qui a "<<Players[i].nbT()<<" vie, a pour cible le joueur "<<target+1<<" qui a "<<Players[target].nbT()<<" vie"<<endl;
-		cout<<"L'axe entre les deux joueurs est ";
-		if (visible(Players[i],Players[target]))
+		if (Players[i].contact(Players[target]))
 		{
-			cout<<"dégagé"<<endl<<endl;
+			if (Players[i].count() >= MAX_COUNT)
+			{
+				lose_life(Players[target],target);
+				Players[i].count(0);
+			}
 		}
-		else{cout<<"obstrué"<<endl<<endl;}
+		else {
+			//move_player(target)
+			if (visible(Players[i],Players[target]))
+			{
+				if ( Players[i].count() >= MAX_COUNT)
+				{
+					//Players[i].shot(Players[target]);
+				}
+			}
+		}
 		
+		Players[i].add_count();
 	}
 	
 }
@@ -550,7 +559,7 @@ bool Simulation::visible(Player p1, Player p2)
 	Rectangle rect(c1,c2,2*(COEF_RAYON_JOUEUR+COEF_MARGE_JEU)*nb_cell);
 	
 	
-	for (int i(0); i < Obstacles.size(); i++)
+	for (uint i(0); i < Obstacles.size(); i++)
 	{
 		if (rect.collide_with(Obstacles[i].rectangle_()))
 		{
@@ -582,31 +591,93 @@ void Simulation::run(){
 	check_collide();
 	kill();
 	
-	cout<<endl<<endl<<endl;
+	
 	
 }
 
 
 void Simulation::move(){
-
-	
+	run_player();
+	move_ball();	
 }
 
 void Simulation::check_collide(){
 	
-}
-
-void Simulation::kill(){
+	for (uint i(0); i < Players.size(); i++)
+	{
+		if(Players[i].collide_with(Balls))
+		{
+			lose_life(Players[i],i);
+		}
+	}
+	for (uint i(0); i < Balls.size(); i++)
+	{
+		if ((Balls[i].collide_with(Balls))||
+		    (Balls[i].collide_with(Players))||
+		    (Balls[i].collide_with(Obstacles))||
+		    (Balls[i].centre().x() < 0)||
+		    (Balls[i].centre().x() >= nb_cell)|| 
+		    (Balls[i].centre().y() < 0)|| 
+		    (Balls[i].centre().y() >= nb_cell)) 
+        {
+			ball_to_delete.push_back(i);
+		}
+	}
+	for (uint i(0); i < Obstacles.size(); i++)
+	{
+		if (Obstacles[i].collide_with(Balls))
+		{
+			obstacle_to_delete.push_back(i);
+		}
+	}
 	
 }
 
+void Simulation::kill(){
+	int PTD = player_to_delete.size();
+	int BTD = ball_to_delete.size();
+	int OTD = obstacle_to_delete.size();
+	
+	sort(player_to_delete.begin(),player_to_delete.begin()+PTD);
+	sort(ball_to_delete.begin(),ball_to_delete.begin()+BTD);
+	sort(obstacle_to_delete.begin(),obstacle_to_delete.begin()+OTD);
+	
+	for (uint i(player_to_delete.size()-1);i >= 0; i--)
+	{
+		Players.erase(Players.begin()+player_to_delete[i]);
+	}
+	for (uint i(ball_to_delete.size()-1);i >= 0; i--)
+	{
+		Balls.erase(Balls.begin()+ball_to_delete[i]);
+	}
+	for (uint i(obstacle_to_delete.size()-1);i >= 0; i--)
+	{
+		Obstacles.erase(Obstacles.begin()+obstacle_to_delete[i]);
+	}
+	
+	player_to_delete.clear();
+	ball_to_delete.clear();
+	obstacle_to_delete.clear();
+	
+	
+}
 
+void Simulation::lose_life(Player &p, int i)
+{
+	int nbT =p.nbT();
+	nbT--;
+	p.nbT(nbT);
+	if (p.nbT() < 1){
+		player_to_delete.push_back(i);
+	}
+	return;
+}
 
 void Simulation::move_ball(){
 	
 	cout<<"move ball"<<endl;
 	
-	for (int i(0); i < Balls.size(); i++)
+	for (uint i(0); i < Balls.size(); i++)
 	{
 		double cell = SIDE/nb_cell;
 		double angle = Balls[i].angle();
@@ -614,7 +685,7 @@ void Simulation::move_ball(){
 		
 		double move_x, move_y;
 		
-		move_y = cos(angle) * COEF_VITESSE_BALLE * cell;
+		move_x = cos(angle) * COEF_VITESSE_BALLE * cell;
 		move_y = sin(angle) * COEF_VITESSE_BALLE * cell;
 		
 		

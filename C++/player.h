@@ -48,6 +48,10 @@ class Player{
 		int target(std::vector<Player> &liste_joueur);
 		
 		bool contact(Player p);
+		
+		void add_count();
+		
+		bool collide_with(std::vector<Ball> &Balls);
 	
 };
 		

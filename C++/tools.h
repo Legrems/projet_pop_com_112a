@@ -2,6 +2,9 @@
 #define TOOLS_H
 
 #include "define.h"
+#include <vector>
+#include <cmath>
+#include <algorithm>
 
 bool est_entre(double a, double b, double c);
 
