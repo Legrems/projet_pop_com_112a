@@ -2,6 +2,11 @@
 
 using namespace std;
 
+//magic number ???
+Simulation::Simulation()
+	: timeout_value(DELTA_T*1000), disconnect(false)
+	{}
+
 // load simulation state from a file
 bool Simulation::load_from_file(char * filepath) {
     string line;
@@ -376,14 +381,28 @@ vector<Rond> Simulation::get_rond_to_draw(){
 bool Simulation::start(){
     cout << "Start" << endl;
     
-    run_player();
     
+    //début test timer
+    	  
+	Glib::signal_timeout().connect( sigc::mem_fun(*this, &Simulation::on_timeout),
+									  timeout_value );
+
+	
+    //fin test timer
     
     return true;
 }
 
 bool Simulation::stop(){
+	
     cout << "Stop" << endl;
+    
+    //début test timer
+    
+	disconnect  = true;   
+    
+    //fin test timer
+    
     return true;
 }
 
@@ -392,6 +411,7 @@ bool Simulation::step(int number_of_step){
 
     for (uint i = 0; i < number_of_step; ++i){
         cout << "Step " << i << endl;
+        run();
     }
 
     return number_of_step;
@@ -503,6 +523,7 @@ bool Simulation::restore_old_members(){
 
 void Simulation::run_player()
 {
+	cout<<"Run Player"<<endl<<endl;
 	
 	for (int i(0); i < Players.size(); i++)
     {
@@ -538,3 +559,69 @@ bool Simulation::visible(Player p1, Player p2)
 	}
 	return true;
 }
+
+
+bool Simulation::on_timeout()
+{
+
+	if(disconnect)
+	{
+		disconnect = false; // reset for next time a Timer is created
+	  
+		return false; // End of Timer 
+	}
+  
+	run();
+
+	return true; // keep the Timer working
+}
+
+void Simulation::run(){
+	
+	move();
+	check_collide();
+	kill();
+	
+	cout<<endl<<endl<<endl;
+	
+}
+
+
+void Simulation::move(){
+
+	
+}
+
+void Simulation::check_collide(){
+	
+}
+
+void Simulation::kill(){
+	
+}
+
+
+
+void Simulation::move_ball(){
+	
+	cout<<"move ball"<<endl;
+	
+	for (int i(0); i < Balls.size(); i++)
+	{
+		double cell = SIDE/nb_cell;
+		double angle = Balls[i].angle();
+		
+		
+		double move_x, move_y;
+		
+		move_y = cos(angle) * COEF_VITESSE_BALLE * cell;
+		move_y = sin(angle) * COEF_VITESSE_BALLE * cell;
+		
+		
+		Balls[i].move(move_x,move_y);
+	}
+}
+		
+		
+		
+		

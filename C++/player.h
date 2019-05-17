@@ -45,7 +45,9 @@ class Player{
 		
 		Rond rond();
 		
-		int target(std::vector<Player> liste_joueur);
+		int target(std::vector<Player> &liste_joueur);
+		
+		bool contact(Player p);
 	
 };
 		

@@ -105,6 +105,8 @@ MyEvent::MyEvent() :
     m_Button_Save("Save"),
     m_Button_Start_Stop("Start"),
     m_Button_Step("Step")
+    
+    
 {
   
     set_title("Dodgeball");

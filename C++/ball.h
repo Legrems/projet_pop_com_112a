@@ -46,6 +46,8 @@ class Ball {
 		bool collide_with(Obstacle o, double marge);
 		
 		Rond rond();
+		
+		void move(double move_x, double move_y);
 
 
 };

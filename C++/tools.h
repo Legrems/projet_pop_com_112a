@@ -46,6 +46,8 @@ class Point
 		double y();
 		
 		Rectangle rect(Point p2, double largeur);
+		
+		void move(double new_x, double new_y);
 
 };
 

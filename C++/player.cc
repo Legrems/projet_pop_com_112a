@@ -103,7 +103,7 @@ Rond Player::rond()
 	return r;
 }
 		                  
-int Player::target(vector<Player> liste_joueur){
+int Player::target(vector<Player> &liste_joueur){
 	int target = 0;
 	double dist_to_target = 3*DIM_MAX;
 	
@@ -126,6 +126,16 @@ int Player::target(vector<Player> liste_joueur){
 		
 }
 	
+	
+bool Player::contact(Player p){
+	double dist = ecart(centre_, p.centre());
+	double cell = SIDE / nbCells_;
+	if (dist == (2*COEF_RAYON_JOUEUR+COEF_MARGE_JEU)*cell)
+	{
+		return true;
+	}
+	return false;
+}
 	
 	
 	

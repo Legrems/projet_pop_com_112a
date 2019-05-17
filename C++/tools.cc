@@ -43,6 +43,11 @@ void Point::y(double new_y){y_ = new_y;}
 double Point::x(){return x_;}
 double Point::y(){return y_;}	
 
+void Point::move(double new_x, double new_y){
+	x_ += new_x;
+	y_ += new_y;
+}
+
 
 Rectangle::Rectangle(Point p1,Point p2, double largeur)
 		:c1_(0,0),c2_(0,0),c3_(0,0),c4_(0,0)

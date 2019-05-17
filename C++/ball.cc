@@ -92,3 +92,9 @@ Rond Ball::rond()
 	Rond r(c_dessin_, COEF_RAYON_BALLE * cell, blue_ball);
 	return r;
 }
+
+void Ball::move(double move_x, double move_y)
+{
+	centre_.move(move_x,move_y);
+	c_dessin_.move(move_x,-move_y);
+}

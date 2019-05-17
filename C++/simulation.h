@@ -15,6 +15,8 @@
 #include <iomanip>
 #include <cstdlib>
 #include <sstream>
+#include <gtkmm.h>
+#include <cmath>
 
 class Simulation {
     private:
@@ -29,7 +31,31 @@ class Simulation {
         int nb_cell;
 
         int old_nb_cell;
+        
+        
+        
+        //début test timer  
+        
+        // This is the standard prototype of the Timer callback function
+        bool on_timeout(); 
+        
+  
+		// to store a timer disconnect request
+		bool disconnect;
+		
+
+		// This constant is initialized in the constructor's member initializer:
+		const int timeout_value;
+        
+        
+        //fin test timer
+        
+        
+        
     public:
+    
+		Simulation();
+		
         char * ERROR_MODE_KEYWORD = (char*)("Error");
         bool load_from_file(char * filepath);
         bool check_errors(bool start_game);
@@ -61,7 +87,17 @@ class Simulation {
         bool backup_members();
         bool restore_old_members();
         
+        void run();
+        
+        void move();
+        void check_collide();
+        void kill();
+        
         void run_player();
+		void move_ball();
+        
+        void lose_life(Player &p);
+        
         bool visible(Player p1, Player p2);
 };
 

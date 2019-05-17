@@ -37,6 +37,8 @@ protected:
     void on_button_clicked_Save();
     void on_button_clicked_Start_Stop();
     void on_button_clicked_Step();
+    
+    
 
     MyArea              m_Area;
     Gtk::Box            m_Box;
