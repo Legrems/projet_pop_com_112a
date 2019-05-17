@@ -144,7 +144,7 @@ Rectangle Obstacle::rectangle_cell()
 
 bool Obstacle::collide_with(std::vector<Ball> &Balls)
 {
-	double marge = COEF_MARGE_JEU*SIDE/nbCells_;
+	double marge = COEF_MARGE_JEU;
 	for (uint i(0); i < Balls.size(); i++)
 	{
 		if (this->collide_with(Balls[i], marge))

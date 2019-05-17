@@ -15,7 +15,6 @@
 #include <iomanip>
 #include <cstdlib>
 #include <sstream>
-#include <gtkmm.h>
 #include <cmath>
 
 class Simulation {
@@ -38,26 +37,12 @@ class Simulation {
         
         
         
-        //début test timer  
         
-        // This is the standard prototype of the Timer callback function
-        bool on_timeout(); 
-		
-
-		// This constant is initialized in the constructor's member initializer:
-		const int timeout_value;
-		
-		// to store a timer disconnect request
-		bool disconnect;
-        
-        
-        //fin test timer
         
         
         
     public:
     
-		Simulation();
 		
         char * ERROR_MODE_KEYWORD = (char*)("Error");
         bool load_from_file(char * filepath);
@@ -79,9 +64,6 @@ class Simulation {
         std::vector<Rectangle> get_rectangle_to_draw();
         std::vector<Rond> get_rond_to_draw();
 
-        bool start();
-        bool stop();
-        bool step(uint number_of_step);
 
         bool write_members_to_file(char * filepath);
 

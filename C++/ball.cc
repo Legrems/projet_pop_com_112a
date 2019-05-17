@@ -49,9 +49,9 @@ bool Ball::collide_with(Obstacle o, double marge){
 	Point p3(o.colonne() + marge + 1, o.ligne() + marge + 1);
 	
 	Rectangle r_ext(p1,p3);
-	
+
 	if (!(r_ext.appartient(centre_))){return false;}
-	
+
 	p1.x(o.colonne() - marge);
 	p1.y(o.ligne());
 	p3.x(o.colonne() + 1 + marge);
@@ -79,7 +79,7 @@ bool Ball::collide_with(Obstacle o, double marge){
 	if ((ecart(coin2, centre_)) < (marge)){return true;}
 	if ((ecart(coin3, centre_)) < (marge)){return true;}
 	if ((ecart(coin4, centre_)) < (marge)){return true;}	
-	
+
 	return false;
 }
 
@@ -96,22 +96,27 @@ Rond Ball::rond()
 void Ball::move(double move_x, double move_y)
 {
 	double cell = SIDE/nbCells_;
-	centre_.move(move_x/cell,move_y/cell);
+	centre_.move(move_x/cell,-move_y/cell);
 	c_dessin_.move(move_x,-move_y);
 }
 
 bool Ball::collide_with(std::vector<Obstacle> &Obstacles)
 {
-	double marge = COEF_MARGE_JEU*SIDE/nbCells_;
+	double marge = COEF_MARGE_JEU;
+	
 	for (uint i(0); i < Obstacles.size(); i++)
 	{
+		
 		if (this->collide_with(Obstacles[i], marge)){return true;}
 	}
+
 	return false;
 }
 bool Ball::collide_with(std::vector<Player> &Players)
 {
-	double marge = COEF_MARGE_JEU*SIDE/nbCells_;
+	
+	double marge = COEF_MARGE_JEU;
+	
 	for (uint i(0); i < Players.size(); i++)
 	{
 		if (this->collide_with(Players[i], marge)){return true;}
@@ -120,7 +125,7 @@ bool Ball::collide_with(std::vector<Player> &Players)
 }
 bool Ball::collide_with(std::vector<Ball> &Balls)
 {
-	double marge = COEF_MARGE_JEU*SIDE/nbCells_;
+	double marge = COEF_MARGE_JEU;
 	for (uint i(0); i < Balls.size(); i++)
 	{
 		if (this->collide_with(Balls[i], marge))

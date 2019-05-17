@@ -2,10 +2,6 @@
 
 using namespace std;
 
-//magic number ???
-Simulation::Simulation()
-	: timeout_value(DELTA_T*1000), disconnect(false)
-	{}
 
 // load simulation state from a file
 bool Simulation::load_from_file(char * filepath) {
@@ -378,44 +374,7 @@ vector<Rond> Simulation::get_rond_to_draw(){
     return my_ronds;
 }
 
-bool Simulation::start(){
-    cout << "Start" << endl;
-    
-    
-    //début test timer
-    	  
-	Glib::signal_timeout().connect( sigc::mem_fun(*this, &Simulation::on_timeout),
-									  timeout_value );
 
-	
-    //fin test timer
-    
-    return true;
-}
-
-bool Simulation::stop(){
-	
-    cout << "Stop" << endl;
-    
-    //début test timer
-    
-	disconnect  = true;   
-    
-    //fin test timer
-    
-    return true;
-}
-
-bool Simulation::step(uint number_of_step){
-    // Step of the simulation
-
-    for (uint i = 0; i < number_of_step; ++i){
-        cout << "Step " << i << endl;
-        run();
-    }
-
-    return number_of_step;
-}
 
 
 bool Simulation::write_members_to_file(char * filepath){
@@ -570,20 +529,6 @@ bool Simulation::visible(Player p1, Player p2)
 }
 
 
-bool Simulation::on_timeout()
-{
-
-	if(disconnect)
-	{
-		disconnect = false; // reset for next time a Timer is created
-	  
-		return false; // End of Timer 
-	}
-  
-	run();
-
-	return true; // keep the Timer working
-}
 
 void Simulation::run(){
 	
@@ -603,6 +548,8 @@ void Simulation::move(){
 
 void Simulation::check_collide(){
 	
+	cout<<"check collision"<<endl;
+	
 	for (uint i(0); i < Players.size(); i++)
 	{
 		if(Players[i].collide_with(Balls))
@@ -612,6 +559,7 @@ void Simulation::check_collide(){
 	}
 	for (uint i(0); i < Balls.size(); i++)
 	{
+		
 		if ((Balls[i].collide_with(Balls))||
 		    (Balls[i].collide_with(Players))||
 		    (Balls[i].collide_with(Obstacles))||
@@ -634,6 +582,8 @@ void Simulation::check_collide(){
 }
 
 void Simulation::kill(){
+	
+	cout<<"kill"<<endl;
 	int PTD = player_to_delete.size();
 	int BTD = ball_to_delete.size();
 	int OTD = obstacle_to_delete.size();
@@ -641,19 +591,29 @@ void Simulation::kill(){
 	sort(player_to_delete.begin(),player_to_delete.begin()+PTD);
 	sort(ball_to_delete.begin(),ball_to_delete.begin()+BTD);
 	sort(obstacle_to_delete.begin(),obstacle_to_delete.begin()+OTD);
-	
-	for (uint i(player_to_delete.size()-1);i >= 0; i--)
-	{
-		Players.erase(Players.begin()+player_to_delete[i]);
+	if (player_to_delete.size()>0){
+		for (int i(player_to_delete.size()-1);i >= 0; i--)
+		{
+			Players.erase(Players.begin()+player_to_delete[i]);
+		}
 	}
-	for (uint i(ball_to_delete.size()-1);i >= 0; i--)
+	cout<<"kill player"<<endl;
+	if(ball_to_delete.size() > 0)
 	{
-		Balls.erase(Balls.begin()+ball_to_delete[i]);
+		for (int i(ball_to_delete.size()-1);i >= 0; i--)
+		{
+			Balls.erase(Balls.begin()+ball_to_delete[i]);
+		}
 	}
-	for (uint i(obstacle_to_delete.size()-1);i >= 0; i--)
+	cout<<"kill ball"<<endl;
+	if(obstacle_to_delete.size() > 0)
 	{
-		Obstacles.erase(Obstacles.begin()+obstacle_to_delete[i]);
+		for (int i(obstacle_to_delete.size()-1);i >= 0; i--)
+		{
+			Obstacles.erase(Obstacles.begin()+obstacle_to_delete[i]);
+		}
 	}
+	cout<<"kill obstacle"<<endl;
 	
 	player_to_delete.clear();
 	ball_to_delete.clear();
@@ -685,8 +645,8 @@ void Simulation::move_ball(){
 		
 		double move_x, move_y;
 		
-		move_x = cos(angle) * COEF_VITESSE_BALLE * cell;
-		move_y = sin(angle) * COEF_VITESSE_BALLE * cell;
+		move_x = cos(angle) * COEF_VITESSE_BALLE * cell * DELTA_T;
+		move_y = sin(angle) * COEF_VITESSE_BALLE * cell * DELTA_T;
 		
 		
 		Balls[i].move(move_x,move_y);

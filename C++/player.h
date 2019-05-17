@@ -6,6 +6,7 @@
 #include "ball.h"
 #include "obstacle.h"
 #include <vector>
+#include <iostream>
 
 class Ball;
 class Obstacle;

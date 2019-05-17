@@ -95,6 +95,10 @@ void MyArea::draw(const Cairo::RefPtr<Cairo::Context>& cr, Rectangle r){
 //--------------------------------------
 
 MyEvent::MyEvent() :
+
+	timeout_value(DELTA_T*1000), 
+	disconnect(false),
+	
 //Attention, marge = magic number
     m_Box(ORIENTATION_VERTICAL, 10),
     m_Box_Top(ORIENTATION_HORIZONTAL, 10),
@@ -240,15 +244,37 @@ void MyEvent::on_button_clicked_Save(){
 void MyEvent::on_button_clicked_Start_Stop(){
     if (m_Button_Start_Stop.get_label() == "Start"){
         m_Button_Start_Stop.set_label("Stop");
-        m_Area.simulation.start();
+        Glib::signal_timeout().connect( sigc::mem_fun(*this, 
+									   &MyEvent::on_timeout),
+									   timeout_value );
     } 
 
     else {
         m_Button_Start_Stop.set_label("Start");
-        m_Area.simulation.stop();
+        disconnect  = true;
     }
 }
 
 void MyEvent::on_button_clicked_Step(){
-    m_Area.simulation.step(1);
+    m_Area.simulation.run();
+     cout<<"Step"<<endl;
+    m_Area.refresh();
+    
+}
+
+bool MyEvent::on_timeout()
+{
+
+	if(disconnect)
+	{
+		disconnect = false; // reset for next time a Timer is created
+	  
+		return false; // End of Timer 
+	}
+  
+	m_Area.simulation.run();
+	m_Area.refresh();
+	
+
+	return true; // keep the Timer working
 }

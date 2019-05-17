@@ -32,6 +32,22 @@ public:
     bool load_from_file(char * filename);
 
 protected:
+
+	//début test timer  
+        
+	// This is the standard prototype of the Timer callback function
+	bool on_timeout(); 
+		
+
+	// This constant is initialized in the constructor's member initializer:
+	const int timeout_value;
+	
+	// to store a timer disconnect request
+	bool disconnect;
+        
+        
+//fin test timer
+
     void on_button_clicked_Exit();
     void on_button_clicked_Open();
     void on_button_clicked_Save();

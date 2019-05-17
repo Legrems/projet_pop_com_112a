@@ -171,7 +171,7 @@ Rectangle::Rectangle ()
 		{}
 		
 Rectangle::Rectangle (Point a, Point b)
-		: Form(), c1_(a), c2_(a.x(),b.y()),c3_(b),c4_(a.y(),b.x())
+		: Form(), c1_(a), c2_(a.x(),b.y()),c3_(b),c4_(b.x(),a.y())
 		{}
 		
 Rectangle::Rectangle (Point a, Point b, Point c, Point d)
