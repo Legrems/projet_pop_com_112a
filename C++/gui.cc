@@ -253,7 +253,8 @@ void MyEvent::on_button_clicked_Start_Stop(){
 
 void MyEvent::on_button_clicked_Step(){
     m_Area.simulation.run();
-     cout<<"Step"<<endl;
+    set_etat_jeu();
+	set_label_top(etat_jeu);
     m_Area.refresh();
     
 }
