@@ -35,6 +35,10 @@ class Simulation {
 
         int old_nb_cell;
         
+        bool gamesover_;
+        bool blocked_;
+		bool ready_to_run_;
+        
         
         
         
@@ -43,6 +47,7 @@ class Simulation {
         
     public:
     
+		Simulation();
 		
         char * ERROR_MODE_KEYWORD = (char*)("Error");
         bool load_from_file(char * filepath);
@@ -84,6 +89,10 @@ class Simulation {
         void lose_life(Player &p, int i);
         
         bool visible(Player p1, Player p2);
+        
+        bool gamesover();
+        bool blocked();
+        bool ready_to_run();
 };
 
 #endif

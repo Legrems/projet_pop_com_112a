@@ -2,6 +2,11 @@
 #include "gui.h"
 #include <cairomm/context.h>
 
+#define LABEL_NO_GAME_TO_RUN "No game to run"
+#define LABEL_GAME_READY_TO_RUN "Game ready to run"
+#define LABEL_GAME_S_OVER "Game's over !"
+#define LABEL_CANNOT_COMPLETE_THE_GAME "Cannot complete the game !"
+
 using namespace std;
 using namespace Gtk;
 
@@ -29,10 +34,6 @@ bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     for (uint i = 0; i < all_rond.size(); ++i){
         draw(cr, all_rond[i]);
     }
-
-    //draw(cr, Rond(Point(0, 0), 100, Couleur(1, 0, 1), 0.75));
-    //draw(cr, Rond(Point(200, 0), 100, Couleur(0, 1, 1), 0.25));
-    //draw(cr, Rond(Point(0, 200), 100, Couleur(1, 0, 0), 0.5));
     
     return true;
 }
@@ -99,11 +100,13 @@ MyEvent::MyEvent() :
 	timeout_value(DELTA_T*1000), 
 	disconnect(false),
 	
+	
+	
 //Attention, marge = magic number
     m_Box(ORIENTATION_VERTICAL, 10),
     m_Box_Top(ORIENTATION_HORIZONTAL, 10),
 
-    m_Label_Top("No game to run"),
+    m_Label_Top(LABEL_NO_GAME_TO_RUN),
     m_Button_Exit("Exit"),
     m_Button_Open("Open"),
     m_Button_Save("Save"),
@@ -131,8 +134,8 @@ MyEvent::MyEvent() :
 
     m_Area.set_size_request(SIDE, SIDE);
     m_Box.pack_start(m_Area);
-  
-  
+	
+	
     show_all_children();
 
 
@@ -157,7 +160,6 @@ bool MyEvent::load_from_file(char * filename){
 }
 
 void MyEvent::on_button_clicked_Exit(){
-  cout << "Exit" << endl;
   exit(0);
 }
 
@@ -173,10 +175,8 @@ void MyEvent::on_button_clicked_Open(){
 
     switch(result){
         case(RESPONSE_OK):{
-            cout << "Open clicked." << endl;
             //Notice that this is a std::string, not a Glib::ustring.
             string filename = dialog.get_filename();
-            cout << "File selected: " << filename << endl;
  
             m_Area.simulation.backup_members();
             m_Area.simulation.destroy_current_members();
@@ -186,13 +186,13 @@ void MyEvent::on_button_clicked_Open(){
                 // cout << is_error << endl;
                 if (!is_error) {
                     // Pas d'erreur, good -> on affiche
-                    cout << "Refreshing" << endl;
 
                 } else {
-                    cout << "Restoring all members" << endl;
                     m_Area.simulation.restore_old_members();
                     // On restore les anciens membres
                 }
+                
+                set_label_top(1);
 
                 m_Area.refresh();
 
@@ -201,7 +201,6 @@ void MyEvent::on_button_clicked_Open(){
             break;
         }
         case(RESPONSE_CANCEL):{
-            cout << "Cancel clicked." << endl;
             break;
         }
         default:{
@@ -222,16 +221,13 @@ void MyEvent::on_button_clicked_Save(){
 
     switch(result){
         case(RESPONSE_OK):{
-            cout << "Save clicked." << endl;
-
+           
             string filename = dialog.get_filename();
-            cout << "File selected: " << filename << endl;
 
             m_Area.simulation.write_members_to_file((char *)(filename.c_str()));
             break;
         }
         case(RESPONSE_CANCEL):{
-            cout << "Cancel clicked." << endl;
             break;
         }
         default:{
@@ -271,10 +267,72 @@ bool MyEvent::on_timeout()
 	  
 		return false; // End of Timer 
 	}
+	cout<<"bite"<<endl;
   
 	m_Area.simulation.run();
+	set_etat_jeu();
+	set_label_top(etat_jeu);
 	m_Area.refresh();
 	
 
 	return true; // keep the Timer working
 }
+
+void MyEvent::set_label_top(int etat)
+{
+	cout<<etat<<endl;
+	
+	if(etat == 0)
+	{ 
+		m_Label_Top.set_label(LABEL_NO_GAME_TO_RUN);
+	}
+	if(etat == 1)
+	{
+		m_Label_Top.set_label(LABEL_GAME_READY_TO_RUN);
+	}
+	if(etat == 2)
+	{
+		m_Label_Top.set_label(LABEL_GAME_S_OVER);
+	}
+	if(etat == 3)
+	{	
+		m_Label_Top.set_label(LABEL_CANNOT_COMPLETE_THE_GAME);
+	}	
+	}
+
+
+void MyEvent::set_etat_jeu()
+{
+	if(m_Area.simulation.gamesover())
+	{
+		etat_jeu = 2 ;
+		return;
+	}
+	
+	if(m_Area.simulation.blocked())
+	{
+		etat_jeu = 3;
+		return;
+	}
+	
+	if (m_Area.simulation.ready_to_run())
+	{
+		etat_jeu = 1;
+		return;
+	}
+	
+	else
+	{
+		etat_jeu = 0;
+		return;
+	}
+}
+
+
+bool MyEvent::check_errors(bool start_game)
+{
+	return m_Area.simulation.check_errors(start_game);
+}
+	
+void MyEvent::set_etat_jeu(int i){etat_jeu = i;}
+int MyEvent::get_etat_jeu(){return etat_jeu;}

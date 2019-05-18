@@ -2,8 +2,10 @@
 #define GUI_H
 
 #include <gtkmm.h>
+#include <string.h>
 #include "tools.h"
 #include "simulation.h"
+#include "enum.h"
 
 
 class MyArea : public Gtk::DrawingArea
@@ -30,6 +32,11 @@ public:
     MyEvent();
     virtual ~MyEvent();
     bool load_from_file(char * filename);
+    bool check_errors(bool start_game);
+    
+    void set_etat_jeu(int i);
+    int get_etat_jeu();
+    void set_label_top(int etat);
 
 protected:
 
@@ -54,6 +61,8 @@ protected:
     void on_button_clicked_Start_Stop();
     void on_button_clicked_Step();
     
+
+	int etat_jeu;
     
 
     MyArea              m_Area;
@@ -70,6 +79,8 @@ protected:
   
 private:
     void draw();
+    
+    void set_etat_jeu();
 };
 
 #endif

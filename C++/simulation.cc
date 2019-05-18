@@ -3,6 +3,11 @@
 using namespace std;
 
 
+Simulation::Simulation()
+	: gamesover_(false), blocked_(false), ready_to_run_(false)
+	{}
+
+
 // load simulation state from a file
 bool Simulation::load_from_file(char * filepath) {
     string line;
@@ -338,7 +343,7 @@ bool Simulation::check_errors(bool start_game) {
 
     double marge = (COEF_MARGE_JEU) * (SIDE / nb_cell);
 
-    if (start_game) marge /= 2;
+    if (start_game) marge *= 2;
 
     if (check_ball_collision(marge)) return true;
     if (check_player_collision(marge)) return true;
@@ -543,12 +548,18 @@ bool Simulation::visible(Player p1, Player p2)
 
 void Simulation::run(){
 	
+	ready_to_run_ = true;
+	
 	move_player();
 	shot_player();
 	move_ball();
 	check_collide();
 	kill();
 	
+	if (Players.size() <= 1)
+	{
+		gamesover_ = true;
+	}
 	
 	
 }
@@ -557,7 +568,7 @@ void Simulation::run(){
 
 void Simulation::check_collide(){
 	
-	cout<<"check collision"<<endl;
+	
 	
 	for (uint i(0); i < Players.size(); i++)
 	{
@@ -592,7 +603,6 @@ void Simulation::check_collide(){
 
 void Simulation::kill(){
 	
-	cout<<"kill"<<endl;
 	int PTD = player_to_delete.size();
 	int BTD = ball_to_delete.size();
 	int OTD = obstacle_to_delete.size();
@@ -606,7 +616,7 @@ void Simulation::kill(){
 			Players.erase(Players.begin()+player_to_delete[i]);
 		}
 	}
-	cout<<"kill player"<<endl;
+
 	if(ball_to_delete.size() > 0)
 	{
 		for (int i(ball_to_delete.size()-1);i >= 0; i--)
@@ -614,7 +624,7 @@ void Simulation::kill(){
 			Balls.erase(Balls.begin()+ball_to_delete[i]);
 		}
 	}
-	cout<<"kill ball"<<endl;
+
 	if(obstacle_to_delete.size() > 0)
 	{
 		for (int i(obstacle_to_delete.size()-1);i >= 0; i--)
@@ -622,7 +632,7 @@ void Simulation::kill(){
 			Obstacles.erase(Obstacles.begin()+obstacle_to_delete[i]);
 		}
 	}
-	cout<<"kill obstacle"<<endl;
+
 	
 	player_to_delete.clear();
 	ball_to_delete.clear();
@@ -644,7 +654,7 @@ void Simulation::lose_life(Player &p, int i)
 
 void Simulation::move_ball(){
 	
-	cout<<"move ball"<<endl;
+
 	
 	for (uint i(0); i < Balls.size(); i++)
 	{
@@ -659,11 +669,11 @@ void Simulation::move_ball(){
 		
 		
 		Balls[i].move(move_x,move_y);
-		
-		cout<<"test tan "<<atan(-1)<<endl;
 	}
 }
 		
-		
+bool Simulation::gamesover(){ return gamesover_;}
+bool Simulation::blocked(){ return blocked_;}
+bool Simulation::ready_to_run(){return ready_to_run_;}		
 		
 		
