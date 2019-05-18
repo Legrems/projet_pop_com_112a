@@ -16,7 +16,7 @@ class Obstacle {
 	
 		int ligne_;     //ligne de l'obstacle 
 		int colonne_;   //colonne de l'obstacle
-		int nbCells_;
+		int nb_cells_;
 		Point coin_sup_;
 		
 	public : 
@@ -34,8 +34,8 @@ class Obstacle {
 		void coin_sup(Point p);
 		Point coin_sup();
 		
-		void nbCells(int n);
-		int nbCells();
+		void nb_cells(int n);
+		int nb_cells();
 		
 		bool collide_with(Player p, double marge);
 		

@@ -4,7 +4,7 @@ using namespace std;
 
 
 Ball::Ball(Point c, double a, double n)
-		: centre_(c), angle_(a), nbCells_(n), 
+		: centre_(c), angle_(a), nb_cells_(n), 
 		 c_dessin_(c.x() * SIDE / n - DIM_MAX,
 		 		   -(DIM_MAX - c.y() * SIDE / n))
 		{}
@@ -13,8 +13,8 @@ Ball::Ball()
 		: angle_(0)
 		{}
 
-void Ball::nbCells(double n){nbCells_ = n;}
-double Ball::nbCells(){return nbCells_;}
+void Ball::nb_cells(double n){nb_cells_ = n;}
+double Ball::nb_cells(){return nb_cells_;}
 
 void Ball::centre(Point c){centre_ = c;}
 Point Ball::centre(){return centre_;}
@@ -86,7 +86,7 @@ bool Ball::collide_with(Obstacle o, double marge){
 Rond Ball::rond()
 {
 	
-	double cell = SIDE / nbCells_;
+	double cell = SIDE / nb_cells_;
 	// Not a magic number, just a random blue
 	Couleur blue_ball(0.1176, 0.5647, 1);
 	Rond r(c_dessin_, COEF_RAYON_BALLE * cell, blue_ball);
@@ -95,7 +95,7 @@ Rond Ball::rond()
 
 void Ball::move(double move_x, double move_y)
 {
-	double cell = SIDE/nbCells_;
+	double cell = SIDE/nb_cells_;
 	centre_.move(move_x/cell,-move_y/cell);
 	c_dessin_.move(move_x,-move_y);
 }

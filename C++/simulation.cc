@@ -479,10 +479,18 @@ bool Simulation::restore_old_members(){
     return true;
 }
 
-
-void Simulation::run_player()
+void Simulation::move_player()
 {
-	
+	for (uint i(0); i < Players.size(); i++)
+    {
+		int target = Players[i].target(Players);
+		//move_player(target);
+		
+	}
+}
+
+void Simulation::shot_player()
+{
 	for (uint i(0); i < Players.size(); i++)
     {
 		int target = Players[i].target(Players);
@@ -495,13 +503,14 @@ void Simulation::run_player()
 				Players[i].count(0);
 			}
 		}
-		else {
-			//move_player(target)
+		else 
+		{
 			if (visible(Players[i],Players[target]))
 			{
 				if ( Players[i].count() >= MAX_COUNT)
 				{
-					//Players[i].shot(Players[target]);
+					Players[i].shot(Players[target],Balls);
+					Players[i].count(0);
 				}
 			}
 		}
@@ -510,6 +519,8 @@ void Simulation::run_player()
 	}
 	
 }
+	
+	
 
 bool Simulation::visible(Player p1, Player p2)
 {
@@ -532,7 +543,9 @@ bool Simulation::visible(Player p1, Player p2)
 
 void Simulation::run(){
 	
-	move();
+	move_player();
+	shot_player();
+	move_ball();
 	check_collide();
 	kill();
 	
@@ -541,10 +554,6 @@ void Simulation::run(){
 }
 
 
-void Simulation::move(){
-	run_player();
-	move_ball();	
-}
 
 void Simulation::check_collide(){
 	
@@ -650,6 +659,8 @@ void Simulation::move_ball(){
 		
 		
 		Balls[i].move(move_x,move_y);
+		
+		cout<<"test tan "<<atan(-1)<<endl;
 	}
 }
 		

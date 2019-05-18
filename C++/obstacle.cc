@@ -7,7 +7,7 @@ Obstacle::Obstacle()
 		: ligne_(0),colonne_(0)
 		{}
 Obstacle::Obstacle(int l, int c, int n)
-		: ligne_(l), colonne_(c), nbCells_(n),
+		: ligne_(l), colonne_(c), nb_cells_(n),
 		coin_sup_(c * SIDE / n, l * SIDE / n)
 		{}		
 		
@@ -20,8 +20,8 @@ int Obstacle::colonne(){return colonne_;}
 void Obstacle::coin_sup(Point p){coin_sup_=p;}
 Point Obstacle::coin_sup(){return coin_sup_;}
 
-void Obstacle::nbCells(int n){nbCells_ = n;}
-int Obstacle::nbCells(){return nbCells_;}
+void Obstacle::nb_cells(int n){nb_cells_ = n;}
+int Obstacle::nb_cells(){return nb_cells_;}
 
 bool Obstacle::collide_with(Player p, double marge){
 	
@@ -124,7 +124,7 @@ bool Obstacle::collide_with(Obstacle o){
 
 Rectangle Obstacle::rectangle_()
 {
-	double cell = SIDE / nbCells_;
+	double cell = SIDE / nb_cells_;
 	Couleur red_obstacle(0.5, 0, 0);
 	
 	

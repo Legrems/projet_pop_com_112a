@@ -19,7 +19,7 @@ class Player{
 		Point centre_;   //coordonnée du centre
 		int nbT_;        //nombre de touche restante
 		double count_;   //compteur avant prochain tir
-		int nbCells_;
+		int nb_cells_;
 		Point c_dessin_; //centre dans gtkmm
 		
 	public:
@@ -36,8 +36,8 @@ class Player{
 		double count();         //obtenir le compteur
 		void c_dessin(Point c);
 		Point c_dessin();
-		void nbCells(int n);
-		int nbCells();
+		void nb_cells(int n);
+		int nb_cells();
 		
 		bool collide_with(Player p, double marge);
 		
@@ -54,6 +54,8 @@ class Player{
 		void add_count();
 		
 		bool collide_with(std::vector<Ball> &Balls);
+		
+		void shot(Player p, std::vector<Ball> &Balls);
 	
 };
 		

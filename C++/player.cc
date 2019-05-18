@@ -8,7 +8,7 @@ Player::Player()
 		: nbT_(0)
 		{}
 Player::Player(Point c, int n, double co, int nc)
-		: centre_(c), nbT_(n), count_(co), nbCells_(nc),
+		: centre_(c), nbT_(n), count_(co), nb_cells_(nc),
 		c_dessin_(c.x() * SIDE / nc - DIM_MAX,
 		 		 -(DIM_MAX - c.y() * SIDE / nc))
 		{}		
@@ -25,8 +25,8 @@ double Player::count() {return count_;}
 void Player::c_dessin(Point c){c_dessin_ = c;}
 Point Player::c_dessin(){return c_dessin_;}
 
-void Player::nbCells(int n){nbCells_ = n;}
-int Player::nbCells(){return nbCells_;}
+void Player::nb_cells(int n){nb_cells_ = n;}
+int Player::nb_cells(){return nb_cells_;}
 
 
 bool Player::collide_with(Player p, double marge) {
@@ -96,7 +96,7 @@ Rond Player::rond()
 	Couleur couleur4(1, 1, 0), couleur5(0, 1, 0);
 	Couleur couleur[5] = {couleur1, couleur2, couleur3, couleur4, 
 		                  couleur5};
-	double cell = SIDE / nbCells_;
+	double cell = SIDE / nb_cells_;
 	double frac = count_ / MAX_COUNT;
 	
 	Rond r(c_dessin_, COEF_RAYON_JOUEUR * cell, couleur[nbT_], frac);
@@ -129,7 +129,7 @@ int Player::target(vector<Player> &liste_joueur){
 	
 bool Player::contact(Player p){
 	double dist = ecart(centre_, p.centre());
-	double cell = SIDE / nbCells_;
+	double cell = SIDE / nb_cells_;
 	if (dist == (2*COEF_RAYON_JOUEUR+COEF_MARGE_JEU)*cell)
 	{
 		return true;
@@ -151,3 +151,39 @@ bool Player::collide_with(std::vector<Ball> &Balls)
 	return false;
 }
 	
+	
+void Player::shot(Player p, vector<Ball> &Balls)
+{
+	double vect_x, vect_y, norm_vect, angle, x, y;
+	
+	vect_x = p.centre().x() - centre_.x();
+	vect_y = p.centre().y() - centre_.y();
+	norm_vect = sqrt((vect_x * vect_x) + (vect_y * vect_y));
+	
+	vect_x /= norm_vect;
+	vect_y /= norm_vect;
+	
+	x = centre_.x();
+	x += vect_x * (COEF_MARGE_JEU+COEF_RAYON_BALLE+COEF_RAYON_JOUEUR);
+	y = centre_.y();
+	y += vect_y * (COEF_MARGE_JEU+COEF_RAYON_BALLE+COEF_RAYON_JOUEUR);
+	
+	if(vect_x == 0)
+	{
+		if(vect_y < 0){ angle =  M_PI / 2;}
+		if(vect_y >0){angle = 3 * M_PI / 2;}
+	}
+	else
+	{
+		angle = -atan(vect_y/vect_x);
+		if (vect_x < 0){angle += M_PI;}
+	}
+	Point c(x,y);
+	Ball b(c,angle,nb_cells_);
+	Balls.push_back(b);
+}
+		
+		
+		
+		
+		

@@ -190,7 +190,7 @@ void MyEvent::on_button_clicked_Open(){
 
                 } else {
                     cout << "Restoring all members" << endl;
-                    //m_Area.simulation.restore_old_members();
+                    m_Area.simulation.restore_old_members();
                     // On restore les anciens membres
                 }
 

@@ -74,11 +74,11 @@ class Simulation {
         
         void run();
         
-        void move();
         void check_collide();
         void kill();
         
-        void run_player();
+        void move_player();
+        void shot_player();
 		void move_ball();
         
         void lose_life(Player &p, int i);

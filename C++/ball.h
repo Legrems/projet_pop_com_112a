@@ -15,7 +15,7 @@ class Ball {
 	private :
 		Point centre_;  //coordonnée du centre
 		double angle_;  //angle par rapport à l'horizentale
-		double nbCells_;
+		double nb_cells_;
 		Point c_dessin_; //centre dans gtkmm
 		
 	public :
@@ -36,8 +36,8 @@ class Ball {
 		void c_dessin(Point c);
 		Point c_dessin();
 		
-		void nbCells(double n);
-		double nbCells();
+		void nb_cells(double n);
+		double nb_cells();
 		
 		bool collide_with(Player p, double marge);
 		
