@@ -56,6 +56,8 @@ class Player{
 		bool collide_with(std::vector<Ball> &Balls);
 		
 		void shot(Player p, std::vector<Ball> &Balls);
+
+		void move(double move_x, double move_y);
 	
 };
 		

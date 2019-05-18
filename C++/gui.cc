@@ -268,7 +268,6 @@ bool MyEvent::on_timeout()
 	  
 		return false; // End of Timer 
 	}
-	cout<<"bite"<<endl;
   
 	m_Area.simulation.run();
 	set_etat_jeu();

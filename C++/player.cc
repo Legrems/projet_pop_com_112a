@@ -89,6 +89,12 @@ bool Player::collide_with(Obstacle o, double marge) {
 	return false;
 }
 
+void Player::move(double move_x, double move_y)
+{
+	double cell = SIDE / nb_cells_;
+	centre_.move(move_x / cell, - move_y / cell);
+	c_dessin_.move(move_x, - move_y);
+}
 
 Rond Player::rond()
 {
@@ -105,7 +111,7 @@ Rond Player::rond()
 		                  
 int Player::target(vector<Player> &liste_joueur){
 	int target = 0;
-	double dist_to_target = 3*DIM_MAX;
+	double dist_to_target = 3 * DIM_MAX;
 	
 	for (uint i(0); i < liste_joueur.size(); i++)
 	{
@@ -117,6 +123,7 @@ int Player::target(vector<Player> &liste_joueur){
 			{
 				target = i;
 				dist_to_target = ecart(centre_, liste_joueur[i].centre());
+				//dist_to_target = distance;
 			}
 			
 		}

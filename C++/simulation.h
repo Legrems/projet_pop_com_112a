@@ -38,16 +38,17 @@ class Simulation {
         bool gamesover_;
         bool blocked_;
 		bool ready_to_run_;
+
+        // float**** Floyd_Mat = new float***[nb_cell];
         
-        
-        
-        
-        
+        float* Floyd_Mat;
+        // std::vector<std::vector<std::vector<std::vector<float>>>> Floyd_Matrice;
         
         
     public:
     
-		Simulation();
+        Simulation();
+        ~Simulation();
 		
         char * ERROR_MODE_KEYWORD = (char*)("Error");
         bool load_from_file(char * filepath);
@@ -76,13 +77,14 @@ class Simulation {
         bool destroy_old_members();
         bool backup_members();
         bool restore_old_members();
-        
+
         void run();
         
         void check_collide();
-        void kill();
+        bool kill();
         
-        void move_player();
+        void move_player(int index, int target);
+        void move_players();
         void shot_player();
 		void move_ball();
         
@@ -93,6 +95,10 @@ class Simulation {
         bool gamesover();
         bool blocked();
         bool ready_to_run();
+
+        bool has_obstacles_in(int k, int v);
+        bool floyd();
+        void init_Floyd_Mat();
 };
 
 #endif
