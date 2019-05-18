@@ -643,9 +643,9 @@ void Simulation::shot_player()
 		}
 		
 		Players[i].add_count();
-		if(Players[i].count() > 20)
+		if(Players[i].count() > MAX_COUNT)
 		{
-			Players[i].count(20);
+			Players[i].count(MAX_COUNT);
 		}
 	}
 	
