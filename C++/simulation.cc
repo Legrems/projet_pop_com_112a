@@ -783,9 +783,10 @@ void Simulation::shot_player()
 
 bool Simulation::visible(Player p1, Player p2)
 {
+	double cell = SIDE/nb_cell;
     Point c1 ((p1.c_dessin().x()+DIM_MAX),(p1.c_dessin().y()+DIM_MAX));
     Point c2 ((p2.c_dessin().x()+DIM_MAX),(p2.c_dessin().y()+DIM_MAX));
-    Rectangle rect(c1, c2, 2 * (COEF_RAYON_JOUEUR + COEF_MARGE_JEU) * nb_cell);
+    Rectangle rect(c1, c2, 2*(COEF_RAYON_JOUEUR + COEF_MARGE_JEU)*cell);
     
     
     for (uint i(0); i < Obstacles.size(); i++)
