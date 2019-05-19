@@ -652,7 +652,7 @@ Point Simulation::get_dir_vector(int index, int target){
         double move_x = delta_x * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
         double move_y = delta_y * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
 
-        Point vector(delta_x, - delta_y);
+        Point vector(move_x, - move_y);
 
         return vector;
     }
@@ -783,10 +783,9 @@ void Simulation::shot_player()
 
 bool Simulation::visible(Player p1, Player p2)
 {
-	double cell = SIDE/nb_cell;
     Point c1 ((p1.c_dessin().x()+DIM_MAX),(p1.c_dessin().y()+DIM_MAX));
     Point c2 ((p2.c_dessin().x()+DIM_MAX),(p2.c_dessin().y()+DIM_MAX));
-    Rectangle rect(c1, c2, 2*(COEF_RAYON_JOUEUR + COEF_MARGE_JEU)*cell);
+    Rectangle rect(c1, c2, 2 * (COEF_RAYON_JOUEUR + COEF_MARGE_JEU) * SIDE / nb_cell);
     
     
     for (uint i(0); i < Obstacles.size(); i++)
@@ -809,7 +808,7 @@ void Simulation::run(){
         ready_to_run_ = true;
 
         move_players();
-        //shot_player();
+        shot_player();
         move_ball();
         check_collide();
         have_to_recalculate = kill();
