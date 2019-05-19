@@ -2,7 +2,6 @@
 #define GUI_H
 
 #include <gtkmm.h>
-#include <string.h>
 #include "tools.h"
 #include "simulation.h"
 #include "enum.h"

@@ -5,6 +5,9 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <iostream>
+#include <string.h>
+
 
 bool est_entre(double a, double b, double c);
 

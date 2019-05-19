@@ -1,7 +1,6 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
 
-#include "tools.h"
 #include "player.h"
 #include "obstacle.h"
 #include "ball.h"
@@ -9,13 +8,11 @@
 #include "enum.h"
 
 #include <cstring>
-#include <vector>
 #include <fstream>
-#include <iostream>
 #include <iomanip>
 #include <cstdlib>
 #include <sstream>
-#include <cmath>
+
 
 class Simulation {
     private:

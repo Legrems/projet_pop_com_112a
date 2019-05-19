@@ -1,4 +1,3 @@
-#include <iostream>
 #include "gui.h"
 #include <cairomm/context.h>
 

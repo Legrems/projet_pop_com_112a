@@ -1,7 +1,4 @@
 #include "tools.h"
-#include <cmath>
-#include <iostream>
-#include <algorithm>
 using namespace std;
 
 bool est_entre(double a, double b, double c)
