@@ -8,6 +8,9 @@
 using namespace std;
 using namespace Gtk;
 
+void error(int argc, char * argv[]);
+void step(int argc, char * argv[]);
+
 
 int main(int argc, char * argv[]){
 
@@ -32,25 +35,38 @@ int main(int argc, char * argv[]){
     }
 
     else if (argc == 3 and argv[1] == string(ERROR_MODE_KEYWORD)){
-        Simulation simulation;
-
-        if (simulation.load_from_file(argv[2])){
-            simulation.check_errors(true);
-        }
+        error(argc,argv);
+        return 0;
     }
     
     else if (argc == 4 and argv[1] == string(STEP_MODE_KEYWORD)){
-		Simulation simulation;
-		
-		if(simulation.load_from_file(argv[2])){
-			if (simulation.check_errors(true)) {return 0;}
-			
-			else{
-				simulation.run();
-				simulation.write_members_to_file(argv[3]);
-			}
-		}
+		step(argc,argv);
+		return 0;
 	}			
 
 	return 0;
 }
+
+void error(int argc, char * argv[])
+{
+	Simulation simulation;
+
+    if (simulation.load_from_file(argv[2])){
+		simulation.check_errors(true);
+	}
+}
+	
+void step(int argc, char * argv[])
+{
+	Simulation simulation;
+		
+	if(simulation.load_from_file(argv[2])){
+		if (simulation.check_errors(true)) {return ;}
+			
+		else{
+			simulation.run();
+			simulation.write_members_to_file(argv[3]);
+		}
+	}
+}
+

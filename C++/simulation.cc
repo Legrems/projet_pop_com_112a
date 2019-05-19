@@ -41,8 +41,8 @@ bool Simulation::floyd(){
                         Floyd_Mat[idx(i1, j1, i2, j2, n)] = 0;
                     }
                     // On met 1 sur les cells directement adjacente
-                    else if ((i1 == i2 && fabs(j1 - j2) <= 1)
-                             or (j1 == j2) && fabs(i1 - i2) <= 1){
+                    else if (((i1 == i2) && fabs(j1 - j2) <= 1)
+                             or ((j1 == j2) && (fabs(i1 - i2) <= 1))){
                         Floyd_Mat[idx(i1, j1, i2, j2, n)] = 1;
                     }
                     // On traite les cells en diag.
@@ -107,7 +107,7 @@ void Simulation::show_floyd_matrice_for(int k, int v){
 
 // Check if simulation has obstacles in pos (k, v)
 bool Simulation::has_obstacles_in(int k, int v){
-    for (int i = 0; i < Obstacles.size(); ++i) {
+    for (uint i = 0; i < Obstacles.size(); ++i) {
         if (v == Obstacles[i].ligne() && k == Obstacles[i].colonne()){
             return true;
         }
@@ -183,16 +183,13 @@ void Simulation::decodage_ligne(string line, int nb_ligne)
                        PLAYERS,     NBOBSTACLE,
                        OBSTACLES,   NBBALL,
                        BALLS,       FIN};
-  
     static int etat(NBCELL); // initial state
     static int i(0), total(0);
     double x(0), y(0), nbt(0), count(0);
     double angle(0);
-
     if (nb_ligne == 0){
         etat = NBCELL;
     }
-
     switch(etat) 
     {
     case NBCELL: 
@@ -604,8 +601,7 @@ void Simulation::move_players()
 
 void Simulation::move_player(int index, int target){
     Point vec = get_dir_vector(index, target);
-    // double length = sqrt(vec.x() * vec.x() + vec.y() + vec.y());
-    // cout << "length: " << length << endl;
+    
     Players[index].move(vec);
 }
 
@@ -617,10 +613,8 @@ Point Simulation::get_dir_vector(int index, int target){
     if (ecart(starting, ending) <= 2 * COEF_RAYON_JOUEUR + COEF_MARGE_JEU){
         return Point(0, 0);
     }
-    cout << "dist: " << ecart(starting, ending) << endl;
 
     if (visible(Players[index], Players[target])) {
-        cout << "visible: true" << endl;
         double delta_x = Players[target].centre().x() - Players[index].centre().x();
         double delta_y = Players[target].centre().y() - Players[index].centre().y();
 
@@ -736,8 +730,7 @@ void Simulation::shot_player()
     
 }
     
-    
-
+ 
 bool Simulation::visible(Player p1, Player p2)
 {
     Point c1 ((p1.c_dessin().x()+DIM_MAX),(p1.c_dessin().y()+DIM_MAX));
@@ -834,7 +827,6 @@ bool Simulation::kill(){
             Players.erase(Players.begin()+player_to_delete[i]);
         }
     }
-
     if(ball_to_delete.size() > 0)
     {
         for (int i(ball_to_delete.size()-1);i >= 0; i--)
@@ -842,16 +834,13 @@ bool Simulation::kill(){
             Balls.erase(Balls.begin()+ball_to_delete[i]);
         }
     }
-
     if(obstacle_to_delete.size() > 0)
     {
         for (int i(obstacle_to_delete.size()-1);i >= 0; i--)
         {
             Obstacles.erase(Obstacles.begin()+obstacle_to_delete[i]);
         }
-    }
-
-    
+    } 
     player_to_delete.clear();
     ball_to_delete.clear();
     obstacle_to_delete.clear();
@@ -859,9 +848,7 @@ bool Simulation::kill(){
     if (OTD > 0){
         return true;
     }
-
-    return false;
-    
+    return false;  
 }
 
 void Simulation::lose_life(Player &p, int i)

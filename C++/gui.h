@@ -8,6 +8,7 @@
 #include "enum.h"
 
 
+
 class MyArea : public Gtk::DrawingArea
 {
 public:
@@ -60,6 +61,8 @@ protected:
     void on_button_clicked_Save();
     void on_button_clicked_Start_Stop();
     void on_button_clicked_Step();
+    
+    void button_open_ok();
     
 
 	int etat_jeu;

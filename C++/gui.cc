@@ -164,8 +164,7 @@ void MyEvent::on_button_clicked_Exit(){
 }
 
 void MyEvent::on_button_clicked_Open(){   
-    FileChooserDialog dialog("Please choose a file to open",
-                                  FILE_CHOOSER_ACTION_OPEN);
+    FileChooserDialog dialog("Please choose a file to open", FILE_CHOOSER_ACTION_OPEN);
     dialog.set_transient_for(*this);
 
     dialog.add_button("_Cancel", RESPONSE_CANCEL);
@@ -181,22 +180,8 @@ void MyEvent::on_button_clicked_Open(){
             m_Area.simulation.backup_members();
             m_Area.simulation.destroy_current_members();
             if (m_Area.simulation.load_from_file((char *)(filename.c_str()))){
-
-                bool is_error = m_Area.simulation.check_errors(true);
-                // cout << is_error << endl;
-                if (!is_error) {
-					m_Area.simulation.reset();
-                    // Pas d'erreur, good -> on affiche
-
-                } else {
-                    m_Area.simulation.restore_old_members();
-                    // On restore les anciens membres
-                }
-                
-                set_label_top(1);
-
-                m_Area.refresh();
-
+            
+            button_open_ok();
             }
 
             break;
@@ -210,6 +195,24 @@ void MyEvent::on_button_clicked_Open(){
         }
     }
 }
+
+void MyEvent::button_open_ok()
+{
+	bool is_error = m_Area.simulation.check_errors(true);
+               
+	if (!is_error) {
+		m_Area.simulation.reset();
+		// Pas d'erreur, good -> on affiche
+                    
+	} else {
+		m_Area.simulation.restore_old_members();
+		// On restore les anciens membres
+	}  
+	set_label_top(1);
+	m_Area.refresh();
+}
+
+	
 
 void MyEvent::on_button_clicked_Save(){
     FileChooserDialog dialog("Please choose a file to save", FILE_CHOOSER_ACTION_SAVE);
