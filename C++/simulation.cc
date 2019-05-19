@@ -615,19 +615,7 @@ Point Simulation::get_dir_vector(int index, int target){
     }
 
     if (visible(Players[index], Players[target])) {
-        double delta_x = Players[target].centre().x() - Players[index].centre().x();
-        double delta_y = Players[target].centre().y() - Players[index].centre().y();
-
-        double length = sqrt(delta_x * delta_x + delta_y * delta_y);
-
-        double cell = SIDE / nb_cell;
-
-        double move_x = delta_x * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
-        double move_y = delta_y * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
-
-        Point vector(move_x, - move_y);
-
-        return vector;
+		return move_visible(Players[target], Players[index]);
     }
 
     int p1x = floor(starting.x());
@@ -639,7 +627,51 @@ Point Simulation::get_dir_vector(int index, int target){
     double move_x;
     double move_y;
 
-    for(int i = 0; i < 3; ++i){
+	check_road_floyd(p1x, p1y, p2x, p2y, minimum, move_x, move_y);
+	
+    // minimum > nb_cell^2 => Pas de chemin
+    if (minimum != nb_cell * nb_cell){
+		return move_floyd(move_x,move_y,p1x,p1y,starting);
+
+    } else {
+        blocked_ = true;
+        return Point(0, 0);
+    }
+}
+
+
+Point Simulation::move_floyd(double move_x, double move_y, int p1x, int p1y, 
+							 Point starting)
+{
+	double cell = SIDE / nb_cell;
+
+    double length = sqrt((move_x * move_x) + (move_y * move_y));
+
+	if (length == 0){
+		length = 1;
+	}
+
+	double aim_x = p1x + move_x + 0.5; // 0.5 => centre d'une cell
+	double aim_y = p1y + move_y + 0.5;
+
+	aim_x = aim_x - starting.x();
+	aim_y = aim_y - starting.y();
+
+	length = sqrt(aim_x * aim_x + aim_y * aim_y);
+
+	aim_x = aim_x * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
+	aim_y = aim_y * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
+
+	return Point(aim_x, - aim_y);
+	
+}
+	
+	
+
+void Simulation::check_road_floyd(int p1x, int p1y, int p2x, int p2y, double &minimum, 
+                                  double &move_x, double &move_y)
+{
+	for(int i = 0; i < 3; ++i){
         if (p1x - 1 + i >= nb_cell) {continue;}
         if (p1x - 1 + i < 0) {continue;}
         for(int j = 0; j < 3; ++j){
@@ -666,34 +698,26 @@ Point Simulation::get_dir_vector(int index, int target){
             }
         }
     }
-    // minimum > nb_cell^2 => Pas de chemin
-    if (minimum != nb_cell * nb_cell){
-
-        double cell = SIDE / nb_cell;
-
-        double length = sqrt((move_x * move_x) + (move_y * move_y));
-
-        if (length == 0){
-            length = 1;
-        }
-
-        double aim_x = p1x + move_x + 0.5; // 0.5 => centre d'une cell
-        double aim_y = p1y + move_y + 0.5;
-
-        aim_x = aim_x - starting.x();
-        aim_y = aim_y - starting.y();
-
-        length = sqrt(aim_x * aim_x + aim_y * aim_y);
-
-        aim_x = aim_x * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
-        aim_y = aim_y * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
-
-        return Point(aim_x, - aim_y);
-    } else {
-        blocked_ = true;
-        return Point(0, 0);
-    }
 }
+
+
+Point Simulation::move_visible(Player p1, Player p2)
+{
+	double delta_x = p1.centre().x() - p2.centre().x();
+    double delta_y = p1.centre().y() - p2.centre().y();
+
+    double length = sqrt(delta_x * delta_x + delta_y * delta_y);
+
+    double cell = SIDE / nb_cell;
+
+	double move_x = delta_x * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
+	double move_y = delta_y * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
+
+	Point vector(move_x, - move_y);
+
+	return vector;
+}
+	
 
 void Simulation::shot_player()
 {

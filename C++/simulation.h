@@ -104,6 +104,11 @@ class Simulation {
 
         void show_floyd_matrice_for(int k, int v);
         void reset();
+        
+        Point move_visible(Player p1, Player p2);
+        void check_road_floyd(int p1x, int p1y, int p2x, int p2y, double &minimum, 
+                              double &move_x, double &move_y);
+        Point move_floyd(double move_x, double move_y, int p1x, int p1y, Point starting);
 };
 
 #endif
