@@ -149,6 +149,17 @@ bool Player::contact(Player p){
 	}
 	return false;
 }
+
+bool Player::contact_shot(Player p){
+	double dist1 = ecart(centre_, p.centre());
+	double cell = SIDE / nb_cells_;
+	double dist2 =2*(COEF_RAYON_JOUEUR+COEF_RAYON_BALLE)+COEF_MARGE_JEU;
+	if (dist1 == (dist2*cell))
+	{
+		return true;
+	}
+	return false;
+}
 	
 void Player::add_count(){	
 	count_++;

@@ -185,6 +185,7 @@ void MyEvent::on_button_clicked_Open(){
                 bool is_error = m_Area.simulation.check_errors(true);
                 // cout << is_error << endl;
                 if (!is_error) {
+					m_Area.simulation.reset();
                     // Pas d'erreur, good -> on affiche
 
                 } else {

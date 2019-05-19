@@ -103,6 +103,7 @@ class Simulation {
         Point get_dir_vector(int index, int target);
 
         void show_floyd_matrice_for(int k, int v);
+        void reset();
 };
 
 #endif

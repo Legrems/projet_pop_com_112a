@@ -50,6 +50,7 @@ class Player{
 		int target(std::vector<Player> &liste_joueur);
 		
 		bool contact(Player p);
+		bool contact_shot(Player p);
 		
 		void add_count();
 		

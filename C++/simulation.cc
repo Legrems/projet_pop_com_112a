@@ -750,7 +750,7 @@ void Simulation::shot_player()
     {
         int target = Players[i].target(Players);
         
-        if (Players[i].contact(Players[target]))
+        if (Players[i].contact_shot(Players[target]))
         {
             if (Players[i].count() >= MAX_COUNT)
             {
@@ -941,4 +941,12 @@ bool Simulation::gamesover(){ return gamesover_;}
 bool Simulation::blocked(){ return blocked_;}
 bool Simulation::ready_to_run(){return ready_to_run_;}      
         
+        
+void Simulation::reset()
+{
+	gamesover_ = false;
+	blocked_ = false;
+}
+	
+	
         
