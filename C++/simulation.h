@@ -100,7 +100,7 @@ class Simulation {
         bool floyd();
         void init_Floyd_Mat();
 
-        Point get_dir_vector(Point starting, Point ending);
+        Point get_dir_vector(int index, int target);
 
         void show_floyd_matrice_for(int k, int v);
 };

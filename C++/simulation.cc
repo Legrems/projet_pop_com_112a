@@ -614,47 +614,67 @@ void Simulation::move_players()
     for (uint i = 0; i < Players.size(); i++)
     {
         int target = Players[i].target(Players);
-        cout << "P[i] (" <<Players[i].centre().x() << ", "
+        /*cout << "P[i] (" <<Players[i].centre().x() << ", "
              << Players[i].centre().y() << ")" << endl;
         
         cout << "P[t] (" <<Players[target].centre().x() << ", "
-             << Players[target].centre().y() << ")" << endl;
+             << Players[target].centre().y() << ")" << endl;*/
         move_player(i, target);
     }
 }
 
 void Simulation::move_player(int index, int target){
-    int x = Players[index].centre().x();
-    int y = Players[index].centre().y();
-    cout << index << " -> " << target << endl;
-    // show_floyd_matrice_for(x, y);
-    if (visible(Players[index], Players[target])){
-        double delta_x = Players[target].centre().x() - Players[index].centre().x();
-        double delta_y = Players[target].centre().y() - Players[index].centre().y();
-        double length = sqrt(delta_x * delta_x + delta_y * delta_y);
-        Point vector(delta_x / length, - delta_y / length);
-        Players[index].move(vector);
-    } else {
-        Point vec = get_dir_vector(Players[index].centre(), Players[target].centre());
-        // cout << endl << "Vector found :" << endl;
-        // cout << vec.x() << " : " << vec.y() << endl;
-        Players[index].move(vec);
-    }
+    Point vec = get_dir_vector(index, target);
+    double length = sqrt(vec.x() * vec.x() + vec.y() + vec.y());
+    cout << "length: " << length << endl;
+    Players[index].move(vec);
 }
 
 // Return the cell index to the direction from starting to ending
-Point Simulation::get_dir_vector(Point starting, Point ending){
-    int p1x = round(starting.x() - COEF_RAYON_JOUEUR);
-    int p1y = round(starting.y() - COEF_RAYON_JOUEUR);
-    int p2x = round(ending.x() - COEF_RAYON_JOUEUR);
-    int p2y = round(ending.y() - COEF_RAYON_JOUEUR);
+Point Simulation::get_dir_vector(int index, int target){
+    Point starting = Players[index].centre();
+    Point ending = Players[target].centre();  
+
+    if (ecart(starting, ending) <= 2 * COEF_RAYON_JOUEUR + COEF_MARGE_JEU){
+        return Point(0, 0);
+    }
+    cout << "dist: " << ecart(starting, ending) << endl;
+
+    if (visible(Players[index], Players[target])) {
+        cout << "visible: true" << endl;
+        double delta_x = Players[target].centre().x() - Players[index].centre().x();
+        double delta_y = Players[target].centre().y() - Players[index].centre().y();
+
+        double length = sqrt(delta_x * delta_x + delta_y * delta_y);
+
+        double cell = SIDE / nb_cell;
+
+        double move_x = delta_x * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
+        double move_y = delta_y * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
+
+        Point vector(delta_x, - delta_y);
+
+        return vector;
+    }
+
+    int p1x = floor(starting.x());
+    int p1y = floor(starting.y());
+    int p2x = floor(ending.x());
+    int p2y = floor(ending.y());
+
+    double rx = starting.x() - floor(starting.x());
+    double ry = starting.y() - floor(starting.y());
 
     double minimum = nb_cell * nb_cell;
     double move_x;
     double move_y;
 
     for(int i = 0; i < 3; ++i){
+        if (p1x - 1 + i >= nb_cell) {continue;}
+        if (p1x - 1 + i < 0) {continue;}
         for(int j = 0; j < 3; ++j){
+            if (p1y - 1 + j >= nb_cell) {continue;}
+            if (p1y - 1 + j < 0) {continue;}
             /*cout << Floyd_Mat[idx(p1x - 1 + i, p1y - 1 + j, p2x, p2y, nb_cell)]
                  << "\t";*/
             /*cout << Floyd_Mat[idx(p2x, p2y, p1x - 1 + i, p1y - 1 + j, nb_cell)]
@@ -677,7 +697,6 @@ Point Simulation::get_dir_vector(Point starting, Point ending){
                     // cout << "s:" << s << "\t";
                     if (s < nb_cell * nb_cell){
                         minimum = Floyd_Mat[id];
-                        // cell = new Point(p1x - 1 + i, p1y - 1 + j);
                         move_x = i - 1;
                         move_y = j - 1;
                     }
@@ -688,32 +707,37 @@ Point Simulation::get_dir_vector(Point starting, Point ending){
                 }
             }
         }
-        // cout << endl;
+        //cout << endl;
     }
     // minimum > nb_cell^2 => Pas de chemin
     if (minimum != nb_cell * nb_cell){
 
-        //Il faut encore verifier que le joueur passe
-
-        if (p1x)
-
-        cout << "Movement : ";
+        /*cout << "Movement : ";
         cout << move_x << " : " << move_y << endl;
-        cout << "__________________________" << endl;
+        cout << "__________________________" << endl;*/
 
         // cout << "min: " << minimum << endl;
 
         double cell = SIDE / nb_cell;
 
         double length = sqrt((move_x * move_x) + (move_y * move_y));
+
         if (length == 0){
             length = 1;
         }
-        
-        move_x = move_x * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
-        move_y = move_y * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
 
-        return Point(move_x, - move_y);
+        double aim_x = p1x + move_x + 0.5; // 0.5 => centre d'une cell
+        double aim_y = p1y + move_y + 0.5;
+
+        aim_x = aim_x - starting.x();
+        aim_y = aim_y - starting.y();
+
+        length = sqrt(aim_x * aim_x + aim_y * aim_y);
+
+        aim_x = aim_x * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
+        aim_y = aim_y * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
+
+        return Point(aim_x, - aim_y);
     } else {
         blocked_ = true;
         return Point(0, 0);
@@ -761,7 +785,7 @@ bool Simulation::visible(Player p1, Player p2)
 {
     Point c1 ((p1.c_dessin().x()+DIM_MAX),(p1.c_dessin().y()+DIM_MAX));
     Point c2 ((p2.c_dessin().x()+DIM_MAX),(p2.c_dessin().y()+DIM_MAX));
-    Rectangle rect(c1,c2,2*(COEF_RAYON_JOUEUR+COEF_MARGE_JEU)*nb_cell);
+    Rectangle rect(c1, c2, 2 * (COEF_RAYON_JOUEUR + COEF_MARGE_JEU) * nb_cell);
     
     
     for (uint i(0); i < Obstacles.size(); i++)
@@ -784,7 +808,7 @@ void Simulation::run(){
         ready_to_run_ = true;
 
         move_players();
-        shot_player();
+        //shot_player();
         move_ball();
         check_collide();
         have_to_recalculate = kill();

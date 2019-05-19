@@ -280,7 +280,7 @@ bool MyEvent::on_timeout()
 
 void MyEvent::set_label_top(int etat)
 {
-	cout<<etat<<endl;
+	// cout << etat << endl;
 	
 	if(etat == 0)
 	{ 
