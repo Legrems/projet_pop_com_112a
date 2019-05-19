@@ -26,34 +26,27 @@ bool Simulation::floyd(){
     const int n = nb_cell;
     const double infinity = n * n;
 
-    // ---- init phase
     for (int i1 = 0; i1 < n; ++i1){
         for (int j1 = 0; j1 < n; ++j1){
             // cell (i1, j1)
-            // Pour chaque cells
             for (int i2 = 0; i2 < n; ++i2){
                 for (int j2 = 0; j2 < n; ++j2){
-                    // cout << i1 << "/" << j1 << "-" << i2 << "/" << j2 << endl;
-                    // cell (i2, j2)
                     // On itere sur chaque cells
                     // On met inf si y'a un obstacle
                     if (has_obstacles_in(i2, j2)) {
-                        // Floyd_Mat[i1][j1][i2][j2] = infinity;
                         Floyd_Mat[idx(i1, j1, i2, j2, n)] = infinity;
                     }
                     // On met 0 sur la case elle meme
-                    else if (i1 == i2 and j1 == j2){
-                        // Floyd_Mat[i1][j1][i2][j2] = 0;
+                    else if (i1 == i2 && j1 == j2){
                         Floyd_Mat[idx(i1, j1, i2, j2, n)] = 0;
                     }
                     // On met 1 sur les cells directement adjacente
-                    else if ((i1 == i2 and fabs(j1 - j2) <= 1)
-                             or (j1 == j2) and fabs(i1 - i2) <= 1){
-                        // Floyd_Mat[i1][j1][i2][j2] = 1;
+                    else if ((i1 == i2 && fabs(j1 - j2) <= 1)
+                             or (j1 == j2) && fabs(i1 - i2) <= 1){
                         Floyd_Mat[idx(i1, j1, i2, j2, n)] = 1;
                     }
                     // On traite les cells en diag.
-                    else if (fabs(i1 - i2) == 1 and fabs(j1 - j2) == 1){
+                    else if (fabs(i1 - i2) == 1 && fabs(j1 - j2) == 1){
                         int di = i1 - i2;
                         int dj = j1 - j2;
                         int nb_voisin_obst = 0;
@@ -62,28 +55,23 @@ bool Simulation::floyd(){
 
                         switch(nb_voisin_obst){
                             case 0:
-                                // Floyd_Mat[i1][j1][i2][j2] = 1.41421;
                                 Floyd_Mat[idx(i1, j1, i2, j2, n)] = 1.41421;
                                 break;
                             case 1:
-                                // Floyd_Mat[i1][j1][i2][j2] = 2;
                                 Floyd_Mat[idx(i1, j1, i2, j2, n)] = 2;
                                 break;
                             default:
-                                // Floyd_Mat[i1][j1][i2][j2] = infinity;
                                 Floyd_Mat[idx(i1, j1, i2, j2, n)] = infinity;
                         }
                     }
                     // On met "infinity" sur le reste
                     else {
-                        // Floyd_Mat[i1][j1][i2][j2] = infinity;
                         Floyd_Mat[idx(i1, j1, i2, j2, n)] = infinity;
                     }
                 }
             }
         }
     }
-    // cout << "done with init" << endl;
     // -- calcul phase
     for (int k1 = 0; k1 < n; ++k1){
         for (int k2 = 0; k2 < n; ++k2){
@@ -96,10 +84,6 @@ bool Simulation::floyd(){
                             double m = fmin(Floyd_Mat[idx(i1, i2, j1, j2, n)],
                                           Floyd_Mat[idx(i1, i2, k1, k2, n)] +
                                           Floyd_Mat[idx(k1, k2, j1, j2, n)]); 
-                            // cell (j1, j2)
-                            // Floyd_Mat[i1][i2][j1][j2] = fmin(Floyd_Mat[i1][i2][j1][j2],
-                            //                                 Floyd_Mat[i1][i2][k1][k2] +
-                            //                                 Floyd_Mat[k1][k2][j1][j2]);
                             Floyd_Mat[idx(i1, i2, j1, j2, n)] = m;
                         }
                     }
@@ -124,7 +108,7 @@ void Simulation::show_floyd_matrice_for(int k, int v){
 // Check if simulation has obstacles in pos (k, v)
 bool Simulation::has_obstacles_in(int k, int v){
     for (int i = 0; i < Obstacles.size(); ++i) {
-        if (v == Obstacles[i].ligne() and k == Obstacles[i].colonne()){
+        if (v == Obstacles[i].ligne() && k == Obstacles[i].colonne()){
             return true;
         }
     }
@@ -463,7 +447,7 @@ bool Simulation::detect_if_outside(vector<Obstacle> o) {
     return false;
 }
 
-// Run some check about the collision, and the range of the positions
+// Run some check about the collision, && the range of the positions
 bool Simulation::check_errors(bool start_game) {
 
     double marge = (COEF_MARGE_JEU);
@@ -571,7 +555,7 @@ bool Simulation::destroy_old_members(){
 }
 
 bool Simulation::backup_members(){
-    // Delete old members, and put the actual in the old ones
+    // Delete old members, && put the actual in the old ones
     destroy_old_members();
 
     for (uint i = 0; i < Players.size(); ++i) {
@@ -614,19 +598,14 @@ void Simulation::move_players()
     for (uint i = 0; i < Players.size(); i++)
     {
         int target = Players[i].target(Players);
-        /*cout << "P[i] (" <<Players[i].centre().x() << ", "
-             << Players[i].centre().y() << ")" << endl;
-        
-        cout << "P[t] (" <<Players[target].centre().x() << ", "
-             << Players[target].centre().y() << ")" << endl;*/
         move_player(i, target);
     }
 }
 
 void Simulation::move_player(int index, int target){
     Point vec = get_dir_vector(index, target);
-    double length = sqrt(vec.x() * vec.x() + vec.y() + vec.y());
-    cout << "length: " << length << endl;
+    // double length = sqrt(vec.x() * vec.x() + vec.y() + vec.y());
+    // cout << "length: " << length << endl;
     Players[index].move(vec);
 }
 
@@ -662,9 +641,6 @@ Point Simulation::get_dir_vector(int index, int target){
     int p2x = floor(ending.x());
     int p2y = floor(ending.y());
 
-    double rx = starting.x() - floor(starting.x());
-    double ry = starting.y() - floor(starting.y());
-
     double minimum = nb_cell * nb_cell;
     double move_x;
     double move_y;
@@ -675,26 +651,14 @@ Point Simulation::get_dir_vector(int index, int target){
         for(int j = 0; j < 3; ++j){
             if (p1y - 1 + j >= nb_cell) {continue;}
             if (p1y - 1 + j < 0) {continue;}
-            /*cout << Floyd_Mat[idx(p1x - 1 + i, p1y - 1 + j, p2x, p2y, nb_cell)]
-                 << "\t";*/
-            /*cout << Floyd_Mat[idx(p2x, p2y, p1x - 1 + i, p1y - 1 + j, nb_cell)]
-                 << "\t";*/
-            // int id = idx(p1x - 1 + i, p1y - 1 + j, p2x, p2y, nb_cell);
             int id = idx(p2x, p2y, p1x - 1 + i, p1y - 1 + j, nb_cell);
             if (Floyd_Mat[id] < minimum){
-                if (i != 1 and j != 1){
+                if (i != 1 && j != 1){
                     // Check si la somme des voisins vaut plus que nb_cell^2
                     // => on va pas tangent
-                    /*float s = Floyd_Mat[idx(p1x - 1 + i, p1y - 1 + j, p2x, p2y, nb_cell)] +
-                              Floyd_Mat[idx(p1x - 1 + i, 0, p2x, p2y, nb_cell)] + 
-                              Floyd_Mat[idx(0, p1y - 1 + j, p2x, p2y, nb_cell)];*/
                     float s = Floyd_Mat[idx(p2x, p2y, p1x - 1 + i, p1y - 1 + j, nb_cell)] +
                               Floyd_Mat[idx(p2x, p2y, p1x - 1 + i, p1y, nb_cell)] + 
                               Floyd_Mat[idx(p2x, p2y, p1x, p1y - 1 + j, nb_cell)];
-                    // cout << Floyd_Mat[idx(p2x, p2y, p1x - 1 + i, p1y - 1 + j, nb_cell)] << endl;
-                    // cout << Floyd_Mat[idx(p2x, p2y, p1x - 1 + i, p1y, nb_cell)] << endl;
-                    // cout << Floyd_Mat[idx(p2x, p2y, p1x, p1y - 1 + j, nb_cell)] << endl;
-                    // cout << "s:" << s << "\t";
                     if (s < nb_cell * nb_cell){
                         minimum = Floyd_Mat[id];
                         move_x = i - 1;
@@ -707,16 +671,9 @@ Point Simulation::get_dir_vector(int index, int target){
                 }
             }
         }
-        //cout << endl;
     }
     // minimum > nb_cell^2 => Pas de chemin
     if (minimum != nb_cell * nb_cell){
-
-        /*cout << "Movement : ";
-        cout << move_x << " : " << move_y << endl;
-        cout << "__________________________" << endl;*/
-
-        // cout << "min: " << minimum << endl;
 
         double cell = SIDE / nb_cell;
 
@@ -867,9 +824,10 @@ bool Simulation::kill(){
     int BTD = ball_to_delete.size();
     int OTD = obstacle_to_delete.size();
     
-    sort(player_to_delete.begin(),player_to_delete.begin()+PTD);
-    sort(ball_to_delete.begin(),ball_to_delete.begin()+BTD);
-    sort(obstacle_to_delete.begin(),obstacle_to_delete.begin()+OTD);
+    sort(player_to_delete.begin(),player_to_delete.begin() + PTD);
+    sort(ball_to_delete.begin(),ball_to_delete.begin() + BTD);
+    sort(obstacle_to_delete.begin(),obstacle_to_delete.begin() + OTD);
+    
     if (player_to_delete.size()>0){
         for (int i(player_to_delete.size()-1);i >= 0; i--)
         {
