@@ -1,13 +1,14 @@
 #include "simulation.h"
 
+// Get the index for the floyd matrice
 #define idx(a, b, c, d, n) ( (((a * n + b) * n + c) * n + d) )
 
 using namespace std;
 
 
 Simulation::Simulation()
-	: gamesover_(false), blocked_(false), ready_to_run_(false)
-	{
+    : gamesover_(false), blocked_(false), ready_to_run_(false)
+    {
 
     }
 
@@ -16,14 +17,14 @@ Simulation::~Simulation(){
 }
 
 void Simulation::init_Floyd_Mat(){
-    delete[] Floyd_Mat;
-    Floyd_Mat = new float[nb_cell * nb_cell * nb_cell * nb_cell];
+    // delete[] Floyd_Mat;
+    Floyd_Mat = new double[nb_cell * nb_cell * nb_cell * nb_cell];
 }
 
 
 bool Simulation::floyd(){
     const int n = nb_cell;
-    const float infinity = n * n;
+    const double infinity = n * n;
 
     // ---- init phase
     for (int i1 = 0; i1 < n; ++i1){
@@ -61,8 +62,8 @@ bool Simulation::floyd(){
 
                         switch(nb_voisin_obst){
                             case 0:
-                                // Floyd_Mat[i1][j1][i2][j2] = 1.4141;
-                                Floyd_Mat[idx(i1, j1, i2, j2, n)] = 1.4141;
+                                // Floyd_Mat[i1][j1][i2][j2] = 1.41421;
+                                Floyd_Mat[idx(i1, j1, i2, j2, n)] = 1.41421;
                                 break;
                             case 1:
                                 // Floyd_Mat[i1][j1][i2][j2] = 2;
@@ -82,7 +83,7 @@ bool Simulation::floyd(){
             }
         }
     }
-    cout << "done with init" << endl;
+    // cout << "done with init" << endl;
     // -- calcul phase
     for (int k1 = 0; k1 < n; ++k1){
         for (int k2 = 0; k2 < n; ++k2){
@@ -92,7 +93,7 @@ bool Simulation::floyd(){
                     // cell(i1, i2)
                     for (int j1 = 0; j1 < n; ++j1){
                         for (int j2 = 0; j2 < n; ++j2){
-                            float m = fmin(Floyd_Mat[idx(i1, i2, j1, j2, n)],
+                            double m = fmin(Floyd_Mat[idx(i1, i2, j1, j2, n)],
                                           Floyd_Mat[idx(i1, i2, k1, k2, n)] +
                                           Floyd_Mat[idx(k1, k2, j1, j2, n)]); 
                             // cell (j1, j2)
@@ -106,20 +107,24 @@ bool Simulation::floyd(){
             }
         }
     }
-    cout << "calculated" << endl;
-    for (int i2 = 0; i2 < n; ++i2){
-        for (int j2 = 0; j2 < n; ++j2){
-            cout << Floyd_Mat[idx(4, 4, i2, j2, n)] << "\t";
+    // cout << "calculated" << endl;
+   
+    return true;
+}
+
+void Simulation::show_floyd_matrice_for(int k, int v){
+    for (int i = 0; i < nb_cell; ++i){
+        for (int j = 0; j < nb_cell; ++j){
+            cout << Floyd_Mat[idx(k, v, i, j, nb_cell)] << "\t";
         }
         cout << endl;
     }
-    return true;
 }
 
 // Check if simulation has obstacles in pos (k, v)
 bool Simulation::has_obstacles_in(int k, int v){
     for (int i = 0; i < Obstacles.size(); ++i) {
-        if (k == Obstacles[i].ligne() and v == Obstacles[i].colonne()){
+        if (v == Obstacles[i].ligne() and k == Obstacles[i].colonne()){
             return true;
         }
     }
@@ -133,33 +138,34 @@ bool Simulation::load_from_file(char * filepath) {
     int nb_ligne = 0;
     if (!file.fail()) {
         while (getline(file >> ws,line)) {
-			// comment line, ignore it
-			if (line[0] == '#') {
+            // comment line, ignore it
+            if (line[0] == '#') {
                 continue; 
             }
             decodage_ligne(line, nb_ligne);
             nb_ligne++;
         }
-	} else {
+    } else {
         error(READ_OPEN);
         return false;
     }
     init_Floyd_Mat();
+    floyd();
     return true;
 }
 
 void Simulation::error(Error code) {
-	switch (code) {
-	case FILENAME_NONE:
+    switch (code) {
+    case FILENAME_NONE:
         cout << " filename is none\n"; 
         break;
-	case READ_OPEN:
+    case READ_OPEN:
         cout << " failed to open file\n";
         break;
-	case UNKNOWN_FORMAT:
+    case UNKNOWN_FORMAT:
         cout << " unknown format\n";
         break;
-	case LECTURE_ETAT:
+    case LECTURE_ETAT:
         cout << " etat inexistant\n";
         break;
     case MODE_NONE:
@@ -180,22 +186,22 @@ void Simulation::error(Error code) {
     case NBOBSTACLE_0:
         cout << " NBOBSTACLE is define as 0\n";
         break;
-	default:
+    default:
         cout << " erreur inconnue\n";
-	}
+    }
 }
 
 void Simulation::decodage_ligne(string line, int nb_ligne)
 {
-	istringstream data(line);
-	// states of the automate				 
-	enum Etat_lecture {NBCELL,      NBPLAYER,
+    istringstream data(line);
+    // states of the automate                
+    enum Etat_lecture {NBCELL,      NBPLAYER,
                        PLAYERS,     NBOBSTACLE,
                        OBSTACLES,   NBBALL,
                        BALLS,       FIN};
   
-	static int etat(NBCELL); // initial state
-	static int i(0), total(0);
+    static int etat(NBCELL); // initial state
+    static int i(0), total(0);
     double x(0), y(0), nbt(0), count(0);
     double angle(0);
 
@@ -203,72 +209,72 @@ void Simulation::decodage_ligne(string line, int nb_ligne)
         etat = NBCELL;
     }
 
-	switch(etat) 
-	{
-	case NBCELL: 
-		if (!(data >> total)) error(UNKNOWN_FORMAT); 
+    switch(etat) 
+    {
+    case NBCELL: 
+        if (!(data >> total)) error(UNKNOWN_FORMAT); 
         else i = 0;
-		if (total == 0) error(NBCELL_0);
+        if (total == 0) error(NBCELL_0);
         else etat = NBPLAYER;
         nb_cell = total; 
-	    break;
+        break;
 
-	case NBPLAYER: 
-		if (!(data >> total)) error(UNKNOWN_FORMAT);
+    case NBPLAYER: 
+        if (!(data >> total)) error(UNKNOWN_FORMAT);
         else i = 0;
-		if (total == 0) error(NBPLAYERS_0);
+        if (total == 0) error(NBPLAYERS_0);
         else etat = PLAYERS;
-	    break;
+        break;
 
-	case PLAYERS:{
-		if (!(data >> x >> y >> nbt >> count)) error(UNKNOWN_FORMAT); 
+    case PLAYERS:{
+        if (!(data >> x >> y >> nbt >> count)) error(UNKNOWN_FORMAT); 
         else ++i;
-		if (i == total) etat = NBOBSTACLE;
+        if (i == total) etat = NBOBSTACLE;
         // Coordonnées en cellule (inversion d'axe Y !)
         double new_x = (x + DIM_MAX) / SIDE * nb_cell;
         double new_y = (DIM_MAX - y) / SIDE * nb_cell;
         Point c(new_x, new_y);
         Player new_player(c, nbt, count, nb_cell);
         Players.push_back(new_player);
-	    break;
+        break;
     }
-	case NBOBSTACLE: 
-		if (!(data >> total)) error(UNKNOWN_FORMAT);
+    case NBOBSTACLE: 
+        if (!(data >> total)) error(UNKNOWN_FORMAT);
         else i = 0;
-		if (total == 0) etat = NBBALL;
+        if (total == 0) etat = NBBALL;
         else etat = OBSTACLES;
-	    break;
+        break;
 
-	case OBSTACLES:{
-		if (!(data >> x >> y)) error(UNKNOWN_FORMAT); 
+    case OBSTACLES:{
+        if (!(data >> x >> y)) error(UNKNOWN_FORMAT); 
         else ++i;
-		if (i == total) etat = NBBALL;
+        if (i == total) etat = NBBALL;
         Obstacle new_obstacle(x, y, nb_cell);
         Obstacles.push_back(new_obstacle);
-	    break;
+        break;
     }
-	case NBBALL: 
-		if (!(data >> total)) error(UNKNOWN_FORMAT);
+    case NBBALL: 
+        if (!(data >> total)) error(UNKNOWN_FORMAT);
         else i = 0;
-		if (total == 0) etat = FIN;
+        if (total == 0) etat = FIN;
         else etat = BALLS;
-	    break;
+        break;
     
     case BALLS:{
-		if (!(data >> x >> y >> angle)) error(UNKNOWN_FORMAT);
+        if (!(data >> x >> y >> angle)) error(UNKNOWN_FORMAT);
         else ++i;
-		if (i == total)  etat = FIN;
+        if (i == total)  etat = FIN;
         // Coordonnées en cellule (inversion d'axe Y !)
         double new_x = (x + DIM_MAX) * nb_cell / SIDE;
         double new_y = (DIM_MAX - y) * nb_cell / SIDE;
         Point c(new_x, new_y);
         Ball new_ball(c, angle, nb_cell);
         Balls.push_back(new_ball);
-	    break;
+        break;
     }
-	case FIN: break;
-	default: error(UNKNOWN_ERROR);
-	}	
+    case FIN: break;
+    default: error(UNKNOWN_ERROR);
+    }   
 }
 
 // Just to make sure all is readed correclty
@@ -460,7 +466,7 @@ bool Simulation::detect_if_outside(vector<Obstacle> o) {
 // Run some check about the collision, and the range of the positions
 bool Simulation::check_errors(bool start_game) {
 
-    double marge = (COEF_MARGE_JEU) * (SIDE / nb_cell);
+    double marge = (COEF_MARGE_JEU);
 
     if (start_game) marge *= 2;
 
@@ -605,210 +611,310 @@ bool Simulation::restore_old_members(){
 
 void Simulation::move_players()
 {
-	for (uint i = 0; i < Players.size(); i++)
+    for (uint i = 0; i < Players.size(); i++)
     {
-		int target = Players[i].target(Players);
-		// move_player(i, target);
-	}
+        int target = Players[i].target(Players);
+        cout << "P[i] (" <<Players[i].centre().x() << ", "
+             << Players[i].centre().y() << ")" << endl;
+        
+        cout << "P[t] (" <<Players[target].centre().x() << ", "
+             << Players[target].centre().y() << ")" << endl;
+        move_player(i, target);
+    }
 }
 
 void Simulation::move_player(int index, int target){
-    // Players[index].move(0, 0);
+    int x = Players[index].centre().x();
+    int y = Players[index].centre().y();
+    cout << index << " -> " << target << endl;
+    // show_floyd_matrice_for(x, y);
+    if (visible(Players[index], Players[target])){
+        double delta_x = Players[target].centre().x() - Players[index].centre().x();
+        double delta_y = Players[target].centre().y() - Players[index].centre().y();
+        double length = sqrt(delta_x * delta_x + delta_y * delta_y);
+        Point vector(delta_x / length, - delta_y / length);
+        Players[index].move(vector);
+    } else {
+        Point vec = get_dir_vector(Players[index].centre(), Players[target].centre());
+        // cout << endl << "Vector found :" << endl;
+        // cout << vec.x() << " : " << vec.y() << endl;
+        Players[index].move(vec);
+    }
+}
+
+// Return the cell index to the direction from starting to ending
+Point Simulation::get_dir_vector(Point starting, Point ending){
+    int p1x = round(starting.x() - COEF_RAYON_JOUEUR);
+    int p1y = round(starting.y() - COEF_RAYON_JOUEUR);
+    int p2x = round(ending.x() - COEF_RAYON_JOUEUR);
+    int p2y = round(ending.y() - COEF_RAYON_JOUEUR);
+
+    double minimum = nb_cell * nb_cell;
+    double move_x;
+    double move_y;
+
+    for(int i = 0; i < 3; ++i){
+        for(int j = 0; j < 3; ++j){
+            /*cout << Floyd_Mat[idx(p1x - 1 + i, p1y - 1 + j, p2x, p2y, nb_cell)]
+                 << "\t";*/
+            /*cout << Floyd_Mat[idx(p2x, p2y, p1x - 1 + i, p1y - 1 + j, nb_cell)]
+                 << "\t";*/
+            // int id = idx(p1x - 1 + i, p1y - 1 + j, p2x, p2y, nb_cell);
+            int id = idx(p2x, p2y, p1x - 1 + i, p1y - 1 + j, nb_cell);
+            if (Floyd_Mat[id] < minimum){
+                if (i != 1 and j != 1){
+                    // Check si la somme des voisins vaut plus que nb_cell^2
+                    // => on va pas tangent
+                    /*float s = Floyd_Mat[idx(p1x - 1 + i, p1y - 1 + j, p2x, p2y, nb_cell)] +
+                              Floyd_Mat[idx(p1x - 1 + i, 0, p2x, p2y, nb_cell)] + 
+                              Floyd_Mat[idx(0, p1y - 1 + j, p2x, p2y, nb_cell)];*/
+                    float s = Floyd_Mat[idx(p2x, p2y, p1x - 1 + i, p1y - 1 + j, nb_cell)] +
+                              Floyd_Mat[idx(p2x, p2y, p1x - 1 + i, p1y, nb_cell)] + 
+                              Floyd_Mat[idx(p2x, p2y, p1x, p1y - 1 + j, nb_cell)];
+                    // cout << Floyd_Mat[idx(p2x, p2y, p1x - 1 + i, p1y - 1 + j, nb_cell)] << endl;
+                    // cout << Floyd_Mat[idx(p2x, p2y, p1x - 1 + i, p1y, nb_cell)] << endl;
+                    // cout << Floyd_Mat[idx(p2x, p2y, p1x, p1y - 1 + j, nb_cell)] << endl;
+                    // cout << "s:" << s << "\t";
+                    if (s < nb_cell * nb_cell){
+                        minimum = Floyd_Mat[id];
+                        // cell = new Point(p1x - 1 + i, p1y - 1 + j);
+                        move_x = i - 1;
+                        move_y = j - 1;
+                    }
+                } else {
+                    minimum = Floyd_Mat[id];
+                    move_x = i - 1;
+                    move_y = j - 1;
+                }
+            }
+        }
+        // cout << endl;
+    }
+    // minimum > nb_cell^2 => Pas de chemin
+    if (minimum != nb_cell * nb_cell){
+
+        //Il faut encore verifier que le joueur passe
+
+        if (p1x)
+
+        cout << "Movement : ";
+        cout << move_x << " : " << move_y << endl;
+        cout << "__________________________" << endl;
+
+        // cout << "min: " << minimum << endl;
+
+        double cell = SIDE / nb_cell;
+
+        double length = sqrt((move_x * move_x) + (move_y * move_y));
+        if (length == 0){
+            length = 1;
+        }
+        
+        move_x = move_x * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
+        move_y = move_y * COEF_VITESSE_JOUEUR * cell * DELTA_T / length;
+
+        return Point(move_x, - move_y);
+    } else {
+        blocked_ = true;
+        return Point(0, 0);
+    }
 }
 
 void Simulation::shot_player()
 {
-	for (uint i(0); i < Players.size(); i++)
+    for (uint i(0); i < Players.size(); i++)
     {
-		int target = Players[i].target(Players);
-		
-		if (Players[i].contact(Players[target]))
-		{
-			if (Players[i].count() >= MAX_COUNT)
-			{
-				lose_life(Players[target],target);
-				Players[i].count(0);
-			}
-		}
-		else 
-		{
-			if (visible(Players[i],Players[target]))
-			{
-				if ( Players[i].count() >= MAX_COUNT)
-				{
-					Players[i].shot(Players[target],Balls);
-					Players[i].count(0);
-				}
-			}
-		}
-		
-		Players[i].add_count();
-		if(Players[i].count() > MAX_COUNT)
-		{
-			Players[i].count(MAX_COUNT);
-		}
-	}
-	
+        int target = Players[i].target(Players);
+        
+        if (Players[i].contact(Players[target]))
+        {
+            if (Players[i].count() >= MAX_COUNT)
+            {
+                lose_life(Players[target],target);
+                Players[i].count(0);
+            }
+        }
+        else 
+        {
+            if (visible(Players[i],Players[target]))
+            {
+                if ( Players[i].count() >= MAX_COUNT)
+                {
+                    Players[i].shot(Players[target],Balls);
+                    Players[i].count(0);
+                }
+            }
+        }
+        
+        Players[i].add_count();
+        if(Players[i].count() > MAX_COUNT)
+        {
+            Players[i].count(MAX_COUNT);
+        }
+    }
+    
 }
-	
-	
+    
+    
 
 bool Simulation::visible(Player p1, Player p2)
 {
-	Point c1 ((p1.c_dessin().x()+DIM_MAX),(p1.c_dessin().y()+DIM_MAX));
-	Point c2 ((p2.c_dessin().x()+DIM_MAX),(p2.c_dessin().y()+DIM_MAX));
-	Rectangle rect(c1,c2,2*(COEF_RAYON_JOUEUR+COEF_MARGE_JEU)*nb_cell);
-	
-	
-	for (uint i(0); i < Obstacles.size(); i++)
-	{
-		if (rect.collide_with(Obstacles[i].rectangle_()))
-		{
-			return false;
-		}
-	}
-	return true;
+    Point c1 ((p1.c_dessin().x()+DIM_MAX),(p1.c_dessin().y()+DIM_MAX));
+    Point c2 ((p2.c_dessin().x()+DIM_MAX),(p2.c_dessin().y()+DIM_MAX));
+    Rectangle rect(c1,c2,2*(COEF_RAYON_JOUEUR+COEF_MARGE_JEU)*nb_cell);
+    
+    
+    for (uint i(0); i < Obstacles.size(); i++)
+    {
+        if (rect.collide_with(Obstacles[i].rectangle_()))
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 
 void Simulation::run(){
 
-    bool have_to_recalculate = false;
-    floyd();
-	
-	ready_to_run_ = true;
+    if (!gamesover_){
 
-	move_players();
-	shot_player();
-	move_ball();
-	check_collide();
-	have_to_recalculate = kill();
-	
-	if (Players.size() <= 1)
-	{
-		gamesover_ = true;
-	}
+        bool have_to_recalculate = false;
+        
+        ready_to_run_ = true;
 
-    if (have_to_recalculate){
-        //floyd();
-    }	
+        move_players();
+        shot_player();
+        move_ball();
+        check_collide();
+        have_to_recalculate = kill();
+        
+        if (Players.size() <= 1)
+        {
+            gamesover_ = true;
+        }
+
+        if (have_to_recalculate){
+            floyd();
+        }   
+    }
 }
 
 
 void Simulation::check_collide(){
-	
-	
-	
-	for (uint i(0); i < Players.size(); i++)
-	{
-		if(Players[i].collide_with(Balls))
-		{
-			lose_life(Players[i],i);
-		}
-	}
-	for (uint i(0); i < Balls.size(); i++)
-	{
-		
-		if ((Balls[i].collide_with(Balls))||
-		    (Balls[i].collide_with(Players))||
-		    (Balls[i].collide_with(Obstacles))||
-		    (Balls[i].centre().x() < 0)||
-		    (Balls[i].centre().x() >= nb_cell)|| 
-		    (Balls[i].centre().y() < 0)|| 
-		    (Balls[i].centre().y() >= nb_cell)) 
+    
+    
+    
+    for (uint i(0); i < Players.size(); i++)
+    {
+        if(Players[i].collide_with(Balls))
         {
-			ball_to_delete.push_back(i);
-		}
-	}
-	for (uint i(0); i < Obstacles.size(); i++)
-	{
-		if (Obstacles[i].collide_with(Balls))
-		{
-			obstacle_to_delete.push_back(i);
-		}
-	}
-	
+            lose_life(Players[i],i);
+        }
+    }
+    for (uint i(0); i < Balls.size(); i++)
+    {
+        
+        if ((Balls[i].collide_with(Balls))||
+            (Balls[i].collide_with(Players))||
+            (Balls[i].collide_with(Obstacles))||
+            (Balls[i].centre().x() < 0)||
+            (Balls[i].centre().x() >= nb_cell)|| 
+            (Balls[i].centre().y() < 0)|| 
+            (Balls[i].centre().y() >= nb_cell)) 
+        {
+            ball_to_delete.push_back(i);
+        }
+    }
+    for (uint i(0); i < Obstacles.size(); i++)
+    {
+        if (Obstacles[i].collide_with(Balls))
+        {
+            obstacle_to_delete.push_back(i);
+        }
+    }
+    
 }
 
 // Return true if one obstacle (or more) is destroyed
 bool Simulation::kill(){
-	
-	int PTD = player_to_delete.size();
-	int BTD = ball_to_delete.size();
-	int OTD = obstacle_to_delete.size();
-	
-	sort(player_to_delete.begin(),player_to_delete.begin()+PTD);
-	sort(ball_to_delete.begin(),ball_to_delete.begin()+BTD);
-	sort(obstacle_to_delete.begin(),obstacle_to_delete.begin()+OTD);
-	if (player_to_delete.size()>0){
-		for (int i(player_to_delete.size()-1);i >= 0; i--)
-		{
-			Players.erase(Players.begin()+player_to_delete[i]);
-		}
-	}
+    
+    int PTD = player_to_delete.size();
+    int BTD = ball_to_delete.size();
+    int OTD = obstacle_to_delete.size();
+    
+    sort(player_to_delete.begin(),player_to_delete.begin()+PTD);
+    sort(ball_to_delete.begin(),ball_to_delete.begin()+BTD);
+    sort(obstacle_to_delete.begin(),obstacle_to_delete.begin()+OTD);
+    if (player_to_delete.size()>0){
+        for (int i(player_to_delete.size()-1);i >= 0; i--)
+        {
+            Players.erase(Players.begin()+player_to_delete[i]);
+        }
+    }
 
-	if(ball_to_delete.size() > 0)
-	{
-		for (int i(ball_to_delete.size()-1);i >= 0; i--)
-		{
-			Balls.erase(Balls.begin()+ball_to_delete[i]);
-		}
-	}
+    if(ball_to_delete.size() > 0)
+    {
+        for (int i(ball_to_delete.size()-1);i >= 0; i--)
+        {
+            Balls.erase(Balls.begin()+ball_to_delete[i]);
+        }
+    }
 
-	if(obstacle_to_delete.size() > 0)
-	{
-		for (int i(obstacle_to_delete.size()-1);i >= 0; i--)
-		{
-			Obstacles.erase(Obstacles.begin()+obstacle_to_delete[i]);
-		}
-	}
+    if(obstacle_to_delete.size() > 0)
+    {
+        for (int i(obstacle_to_delete.size()-1);i >= 0; i--)
+        {
+            Obstacles.erase(Obstacles.begin()+obstacle_to_delete[i]);
+        }
+    }
 
-	
-	player_to_delete.clear();
-	ball_to_delete.clear();
-	obstacle_to_delete.clear();
+    
+    player_to_delete.clear();
+    ball_to_delete.clear();
+    obstacle_to_delete.clear();
 
     if (OTD > 0){
         return true;
     }
 
-	return false;
-	
+    return false;
+    
 }
 
 void Simulation::lose_life(Player &p, int i)
 {
-	int nbT =p.nbT();
-	nbT--;
-	p.nbT(nbT);
-	if (p.nbT() < 1){
-		player_to_delete.push_back(i);
-	}
-	return;
+    int nbT =p.nbT();
+    nbT--;
+    p.nbT(nbT);
+    if (p.nbT() < 1){
+        player_to_delete.push_back(i);
+    }
+    return;
 }
 
 void Simulation::move_ball(){
-	
+    
 
-	
-	for (uint i(0); i < Balls.size(); i++)
-	{
-		double cell = SIDE/nb_cell;
-		double angle = Balls[i].angle();
-		
-		
-		double move_x, move_y;
-		
-		move_x = cos(angle) * COEF_VITESSE_BALLE * cell * DELTA_T;
-		move_y = sin(angle) * COEF_VITESSE_BALLE * cell * DELTA_T;
-		
-		
-		Balls[i].move(move_x,move_y);
-	}
+    
+    for (uint i(0); i < Balls.size(); i++)
+    {
+        double cell = SIDE / nb_cell;
+        double angle = Balls[i].angle();
+        
+        
+        double move_x, move_y;
+        
+        move_x = cos(angle) * COEF_VITESSE_BALLE * cell * DELTA_T;
+        move_y = sin(angle) * COEF_VITESSE_BALLE * cell * DELTA_T;
+        
+        
+        Balls[i].move(move_x,move_y);
+    }
 }
-		
+        
 bool Simulation::gamesover(){ return gamesover_;}
 bool Simulation::blocked(){ return blocked_;}
-bool Simulation::ready_to_run(){return ready_to_run_;}		
-		
-		
+bool Simulation::ready_to_run(){return ready_to_run_;}      
+        
+        

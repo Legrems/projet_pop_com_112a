@@ -41,7 +41,7 @@ class Simulation {
 
         // float**** Floyd_Mat = new float***[nb_cell];
         
-        float* Floyd_Mat;
+        double* Floyd_Mat;
         // std::vector<std::vector<std::vector<std::vector<float>>>> Floyd_Matrice;
         
         
@@ -99,6 +99,10 @@ class Simulation {
         bool has_obstacles_in(int k, int v);
         bool floyd();
         void init_Floyd_Mat();
+
+        Point get_dir_vector(Point starting, Point ending);
+
+        void show_floyd_matrice_for(int k, int v);
 };
 
 #endif

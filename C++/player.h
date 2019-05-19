@@ -58,6 +58,7 @@ class Player{
 		void shot(Player p, std::vector<Ball> &Balls);
 
 		void move(double move_x, double move_y);
+		void move(Point vector);
 	
 };
 		

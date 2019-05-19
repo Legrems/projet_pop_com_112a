@@ -96,6 +96,12 @@ void Player::move(double move_x, double move_y)
 	c_dessin_.move(move_x, - move_y);
 }
 
+void Player::move(Point vector){
+	double cell = SIDE / nb_cells_;
+	centre_.move(vector.x() / cell, - vector.y() / cell);
+	c_dessin_.move(vector.x(), - vector.y());
+}
+
 Rond Player::rond()
 {
 	Couleur couleur1(0, 0, 0), couleur2(1, 0, 0), couleur3(1, 0.5, 0);
@@ -157,7 +163,7 @@ bool Player::collide_with(std::vector<Ball> &Balls)
 	}
 	return false;
 }
-	
+
 	
 void Player::shot(Player p, vector<Ball> &Balls)
 {
